@@ -139,7 +139,7 @@
             </div>
 
             <!-- 1. Category Selection -->
-            <div class="mb-5 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
+            <div class="mb-4 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-mh-gold font-bold text-sm sm:text-base flex items-center gap-2">
                         <i class="fa-solid fa-scroll"></i> 1. 出題範囲（複数選択可）
@@ -170,7 +170,7 @@
             </div>
 
             <!-- 2. Difficulty Mode Selection -->
-            <div class="mb-5 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
+            <div class="mb-4 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
                 <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-skull-crossbones"></i> 2. 難易度（判定ルール）
                 </h3>
@@ -194,16 +194,37 @@
                 </div>
             </div>
 
-            <!-- 3. Question Count Options -->
-            <div class="bg-stone-900/90 p-4 rounded-lg border border-stone-700/60 mb-6">
-                <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-list-ol"></i> 3. 出題数
-                </h3>
-                <div class="grid grid-cols-4 gap-2">
-                    <button type="button" data-count="5" class="qcount-btn py-2.5 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs sm:text-sm">5問</button>
-                    <button type="button" data-count="10" class="qcount-btn active py-2.5 text-center rounded font-bold border-2 border-mh-gold bg-mh-wood text-mh-gold transition text-xs sm:text-sm">10問</button>
-                    <button type="button" data-count="20" class="qcount-btn py-2.5 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs sm:text-sm">20問</button>
-                    <button type="button" data-count="999" class="qcount-btn py-2.5 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs sm:text-sm">全問(エンドレス)</button>
+            <!-- 3. Hint Toggle & Question Count -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Hint ON/OFF Setting -->
+                <div class="bg-stone-900/90 p-4 rounded-lg border border-stone-700/60 flex flex-col justify-between">
+                    <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> 3. ヒント機能
+                    </h3>
+                    <div class="flex items-center justify-between bg-stone-800/80 p-2.5 rounded-lg border border-stone-700">
+                        <span class="text-xs sm:text-sm text-stone-300 font-bold">1文字目ヒントボタン</span>
+                        <div class="flex gap-2">
+                            <button type="button" id="btnHintOn" class="hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-mh-gold bg-mh-wood text-yellow-400 transition">
+                                ON
+                            </button>
+                            <button type="button" id="btnHintOff" class="hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition">
+                                OFF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Count Selector -->
+                <div class="bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
+                    <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol"></i> 4. 出題数
+                    </h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" data-count="5" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">5問</button>
+                        <button type="button" data-count="10" class="qcount-btn active py-2 text-center rounded font-bold border-2 border-mh-gold bg-mh-wood text-mh-gold transition text-xs">10問</button>
+                        <button type="button" data-count="20" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">20問</button>
+                        <button type="button" data-count="999" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">全問</button>
+                    </div>
                 </div>
             </div>
 
@@ -220,14 +241,17 @@
         <section id="screenQuiz" class="guild-card rounded-lg p-4 sm:p-6 my-auto hidden">
             <!-- Game HUD Header -->
             <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-mh-border/60 text-xs sm:text-sm">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2 sm:space-x-3">
                     <span id="badgeCategory" class="px-2.5 py-1 bg-mh-crimson text-mh-lightgold font-bold rounded text-xs border border-red-500/40">
                         モンスター
                     </span>
                     <span id="badgeDiff" class="px-2.5 py-1 bg-yellow-950 text-yellow-300 font-bold rounded text-xs border border-yellow-600/40">
                         かんたん
                     </span>
-                    <span class="text-stone-300 font-bold">
+                    <span id="badgeHintState" class="px-2 py-1 bg-stone-800 text-stone-300 font-bold rounded text-xs border border-stone-700">
+                        HINT: ON
+                    </span>
+                    <span class="text-stone-300 font-bold ml-1">
                         第 <span id="textCurrentQ" class="text-mh-gold text-lg font-black">1</span> / <span id="textTotalQ">10</span> 問
                     </span>
                 </div>
@@ -358,8 +382,6 @@
     <!-- JAVASCRIPT GAME LOGIC -->
     <script>
         // --- 1. CAPCOM MONSTER HUNTER ACCURATE DATABASE ---
-        // kanjiReadings: Official Kanji Readings (Used in BOTH Easy and Hard)
-        // nameReadings: Katakana / Monster Names (Used ONLY in Easy Mode for Monster category)
         const KANJI_DATA = [
             // モンスター (Monsters)
             { kanji: "雄火竜", kanjiReadings: ["おすかりゅう"], nameReadings: ["リオレウス", "りおれうす"], note: "空の王者", category: "monster" },
@@ -461,6 +483,7 @@
         // --- 3. STATE & DOM REFERENCES ---
         const state = {
             difficulty: 'easy', // 'easy' or 'hard'
+            hintEnabled: true,  // Hint ON/OFF toggle
             questionCountSetting: 10,
             questions: [],
             currentIndex: 0,
@@ -481,6 +504,7 @@
 
         const elBadgeCategory = document.getElementById('badgeCategory');
         const elBadgeDiff = document.getElementById('badgeDiff');
+        const elBadgeHintState = document.getElementById('badgeHintState');
         const elCurrentQ = document.getElementById('textCurrentQ');
         const elTotalQ = document.getElementById('textTotalQ');
         const elTimer = document.getElementById('textTimer');
@@ -492,6 +516,7 @@
 
         const elInputKana = document.getElementById('inputKana');
         const elFormTyping = document.getElementById('formTyping');
+        const elBtnHint = document.getElementById('btnHint');
 
         const elFeedbackBanner = document.getElementById('feedbackBanner');
         const elFeedbackText = document.getElementById('feedbackText');
@@ -537,6 +562,22 @@
                 });
             });
 
+            // Hint ON/OFF Setting Buttons
+            const btnHintOn = document.getElementById('btnHintOn');
+            const btnHintOff = document.getElementById('btnHintOff');
+
+            btnHintOn.addEventListener('click', () => {
+                state.hintEnabled = true;
+                btnHintOn.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-mh-gold bg-mh-wood text-yellow-400 transition";
+                btnHintOff.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition";
+            });
+
+            btnHintOff.addEventListener('click', () => {
+                state.hintEnabled = false;
+                btnHintOff.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-red-500 bg-red-950 text-red-300 transition";
+                btnHintOn.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition";
+            });
+
             // Question Count Selector
             document.querySelectorAll('.qcount-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -563,9 +604,9 @@
                 }
             });
 
-            // Hint Button
-            document.getElementById('btnHint').addEventListener('click', () => {
-                if (!state.isAnsweringAllowed) return;
+            // Hint Button in Game
+            elBtnHint.addEventListener('click', () => {
+                if (!state.isAnsweringAllowed || !state.hintEnabled) return;
                 const q = state.questions[state.currentIndex];
                 const mainReading = q.kanjiReadings[0];
                 showFeedback(true, `💡 ヒント (1文字目): 「 ${mainReading.charAt(0)} 」`, false);
@@ -586,7 +627,8 @@
             document.getElementById('btnShare').addEventListener('click', () => {
                 const total = state.questions.length;
                 const modeStr = state.difficulty === 'easy' ? 'かんたん' : 'むずかしい(G級)';
-                const text = `【モンハン漢字タイピング検定 (${modeStr})】\n称号: ${document.getElementById('resultRankTitle').textContent}\n正解率: ${document.getElementById('resAccuracy').textContent} (${state.correctCount}/${total})\nタイム: ${state.elapsedSeconds.toFixed(1)}s | スコア: ${state.score}pt\n#モンハン漢字クイズ #MHタイピング`;
+                const hintStr = state.hintEnabled ? 'ヒントあり' : 'ヒントなし';
+                const text = `【モンハン漢字タイピング検定 (${modeStr} / ${hintStr})】\n称号: ${document.getElementById('resultRankTitle').textContent}\n正解率: ${document.getElementById('resAccuracy').textContent} (${state.correctCount}/${total})\nタイム: ${state.elapsedSeconds.toFixed(1)}s | スコア: ${state.score}pt\n#モンハン漢字クイズ #MHタイピング`;
                 
                 const dummy = document.createElement("textarea");
                 document.body.appendChild(dummy);
@@ -665,6 +707,19 @@
             } else {
                 elBadgeDiff.textContent = "むずかしい (G級)";
                 elBadgeDiff.className = "px-2.5 py-1 bg-red-950 text-red-300 font-bold rounded text-xs border border-red-600/40";
+            }
+
+            // Hint state badge & button toggle
+            if (state.hintEnabled) {
+                elBadgeHintState.textContent = "HINT: ON";
+                elBadgeHintState.className = "px-2 py-1 bg-amber-950 text-amber-300 font-bold rounded text-xs border border-amber-600/40";
+                elBtnHint.disabled = false;
+                elBtnHint.className = "px-4 py-3 bg-stone-800 hover:bg-stone-700 text-mh-lightgold text-xs sm:text-sm font-bold rounded-lg border border-stone-600 transition flex items-center gap-1.5 cursor-pointer";
+            } else {
+                elBadgeHintState.textContent = "HINT: OFF";
+                elBadgeHintState.className = "px-2 py-1 bg-stone-900 text-stone-500 font-bold rounded text-xs border border-stone-800";
+                elBtnHint.disabled = true;
+                elBtnHint.className = "px-4 py-3 bg-stone-900 text-stone-600 text-xs sm:text-sm font-bold rounded-lg border border-stone-800 cursor-not-allowed flex items-center gap-1.5";
             }
 
             // Animate target text
