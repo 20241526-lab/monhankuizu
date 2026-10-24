@@ -1,894 +1,874 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>モンハン漢字読みタイピング検定 - Monster Hunter Kanji Typing Quiz</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Shippori+Mincho:wght@600;800&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モンハン漢字タイピング検定 - 全モンスター網羅完全版</title>
+  <style>
+    :root {
+      --bg-dark: #0f0f13;
+      --panel-bg: rgba(26, 26, 36, 0.94);
+      --border-gold: #c5a059;
+      --border-dark: #3a3224;
+      --text-main: #f0e6d2;
+      --text-muted: #9e917d;
+      --accent-red: #d93838;
+      --accent-green: #38b000;
+      --gold-glow: 0 0 12px rgba(197, 160, 89, 0.4);
+    }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        mh: {
-                            gold: '#d4af37',
-                            lightgold: '#f3e5ab',
-                            darkgold: '#8a6d1b',
-                            dark: '#0a0908',
-                            panel: '#181411',
-                            wood: '#2a201b',
-                            woodlight: '#3e3028',
-                            crimson: '#8b0000',
-                            accent: '#c8aa6e',
-                            border: '#5c4b38',
-                            bronze: '#a87944'
-                        }
-                    },
-                    fontFamily: {
-                        kanji: ['Shippori Mincho', 'Yuji Syuku', 'serif'],
-                        cinzel: ['Cinzel', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
 
-    <style>
-        body {
-            background-color: #090807;
-            background-image: 
-                radial-gradient(circle at 50% 20%, rgba(139, 0, 0, 0.25) 0%, transparent 60%),
-                radial-gradient(circle at 50% 80%, rgba(212, 175, 55, 0.12) 0%, transparent 50%),
-                linear-gradient(to bottom, #070605, #14100d);
-            color: #e8e2d5;
-            min-height: 100vh;
-            user-select: none;
-        }
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(40, 30, 20, 0.6) 0%, rgba(10, 10, 15, 0.95) 80%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.2) 4px);
+      color: var(--text-main);
+      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS PMincho', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
 
-        .guild-card {
-            background: linear-gradient(135deg, rgba(32, 25, 21, 0.96) 0%, rgba(18, 14, 12, 0.98) 100%);
-            border: 2px solid #5c4b38;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(212, 175, 55, 0.12);
-            position: relative;
-        }
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--panel-bg);
+      border: 3px double var(--border-gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), var(--gold-glow);
+      border-radius: 4px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .guild-card::before {
-            content: '';
-            position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            pointer-events: none;
-        }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: 4px; bottom: 4px;
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      pointer-events: none;
+    }
 
-        .gold-glow {
-            text-shadow: 0 0 12px rgba(212, 175, 55, 0.7), 0 0 25px rgba(212, 175, 55, 0.3);
-        }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--border-gold);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border-dark);
+      padding-bottom: 12px;
+    }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #100d0b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4a3a2b;
-            border-radius: 4px;
-        }
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
 
-        @keyframes slash {
-            0% { transform: scale(0.88) rotate(-2deg); opacity: 0; }
-            50% { transform: scale(1.02) rotate(1deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
+    .screen.active {
+      display: block;
+    }
 
-        .animate-slash {
-            animation: slash 0.2s ease-out forwards;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
-        }
+    /* 設定フォーム */
+    .setting-group {
+      margin-bottom: 18px;
+    }
 
-        .animate-shake {
-            animation: shake 0.3s ease-in-out;
-        }
-    </style>
+    .setting-title {
+      font-size: 1rem;
+      color: var(--border-gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .btn-radio {
+      background: rgba(15, 15, 20, 0.6);
+      border: 1px solid var(--border-dark);
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-radio:hover {
+      border-color: var(--border-gold);
+      color: var(--text-main);
+    }
+
+    .btn-radio.selected {
+      background: rgba(197, 160, 89, 0.2);
+      border-color: var(--border-gold);
+      color: #fff;
+      font-weight: bold;
+      box-shadow: var(--gold-glow);
+    }
+
+    .btn-action {
+      width: 100%;
+      background: linear-gradient(180deg, #c5a059 0%, #8c6a2f 100%);
+      border: 1px solid #ffd700;
+      color: #111;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    /* ゲーム画面 HUD */
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 14px;
+      border: 1px solid var(--border-dark);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .hud-val {
+      color: var(--border-gold);
+      font-weight: bold;
+    }
+
+    /* 出題表示エリア */
+    .question-box {
+      background: radial-gradient(circle, rgba(35, 25, 20, 0.9) 0%, rgba(15, 15, 20, 0.95) 100%);
+      border: 2px solid var(--border-gold);
+      border-radius: 6px;
+      padding: 30px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .q-category {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.5);
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    .q-kanji {
+      font-size: 2.8rem;
+      letter-spacing: 4px;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3), 2px 2px 4px #000;
+      margin: 10px 0;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .q-hint {
+      font-size: 0.9rem;
+      color: #ffd700;
+      min-height: 24px;
+    }
+
+    /* 入力フォーム */
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: rgba(10, 10, 15, 0.9);
+      border: 2px solid var(--border-dark);
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 10px 14px;
+      border-radius: 4px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--border-gold);
+      box-shadow: 0 0 8px rgba(197, 160, 89, 0.3);
+    }
+
+    .btn-sub {
+      background: rgba(40, 35, 30, 0.8);
+      border: 1px solid var(--border-gold);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-sub:hover:not(:disabled) {
+      background: rgba(197, 160, 89, 0.3);
+      color: #fff;
+    }
+
+    .btn-sub:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .msg-area {
+      min-height: 28px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .msg-correct { color: var(--accent-green); }
+    .msg-wrong { color: var(--accent-red); }
+
+    /* リザルト画面 */
+    .result-rank {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .rank-title {
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    .rank-name {
+      font-size: 2rem;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+      margin-top: 6px;
+    }
+
+    .score-detail {
+      background: rgba(0,0,0,0.4);
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .review-list {
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid var(--border-dark);
+      padding: 10px;
+      background: rgba(10, 10, 15, 0.6);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .review-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 4px 0;
+    }
+
+    .review-item span.ok { color: var(--accent-green); }
+    .review-item span.ng { color: var(--accent-red); }
+
+    .sound-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 480px) {
+      .q-kanji { font-size: 2rem; }
+      .container { padding: 16px; }
+    }
+  </style>
 </head>
-<body class="font-sans antialiased flex flex-col justify-between min-h-screen p-2 sm:p-4">
+<body>
 
-    <!-- Header Navigation -->
-    <header class="w-full max-w-4xl mx-auto flex items-center justify-between p-3 mb-2 sm:mb-4 border-b-2 border-mh-border bg-mh-panel/90 rounded-t-lg backdrop-blur">
-        <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-dragon text-2xl sm:text-3xl text-mh-gold"></i>
-            <div>
-                <h1 class="text-lg sm:text-2xl font-black tracking-wider text-mh-gold font-cinzel">MONSTER HUNTER</h1>
-                <p class="text-xs sm:text-sm text-stone-400 font-bold tracking-widest">漢字読みタイピング検定ギルド</p>
-            </div>
+<div class="container">
+  <button id="btnSound" class="sound-toggle" title="音量切替">🔊</button>
+  <h1>モンハン漢字タイピング検定</h1>
+
+  <!-- 設定画面 -->
+  <div id="screenSetup" class="screen active">
+    <div class="setting-group">
+      <div class="setting-title">⚔️ 出題ジャンル</div>
+      <div class="options-grid" id="optCategory">
+        <div class="btn-radio selected" data-value="all">すべて</div>
+        <div class="btn-radio" data-value="monster">モンスター (160+種)</div>
+        <div class="btn-radio" data-value="weapon">武器</div>
+        <div class="btn-radio" data-value="armor">防具</div>
+        <div class="btn-radio" data-value="item">アイテム・素材</div>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-title">📜 難易度</div>
+      <div class="options-grid" id="optDiff">
+        <div class="btn-radio selected" data-value="easy">
+          かんたん<br><small style="font-size:0.75rem; opacity:0.8;">(カタカナ名もOK)</small>
         </div>
-        <div class="flex items-center space-x-2">
-            <button id="soundToggle" class="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 border border-mh-border text-mh-gold rounded flex items-center space-x-2 transition text-xs sm:text-sm">
-                <i id="soundIcon" class="fa-solid fa-volume-high"></i>
-                <span id="soundText" class="hidden sm:inline">SOUND ON</span>
-            </button>
+        <div class="btn-radio" data-value="hard">
+          むずかしい<br><small style="font-size:0.75rem; opacity:0.8;">(漢字読み限定)</small>
         </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="w-full max-w-4xl mx-auto flex-1 flex flex-col justify-center">
-
-        <!-- 1. START / SETTINGS SCREEN -->
-        <section id="screenStart" class="guild-card rounded-lg p-4 sm:p-8 my-auto">
-            <div class="text-center mb-6">
-                <div class="inline-block border-y-2 border-mh-gold px-6 py-2 mb-3">
-                    <span class="text-xs uppercase tracking-widest text-mh-accent font-bold">Guild Quest Board • Typing Test</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-mh-lightgold font-kanji gold-glow">モンハン 漢字読みタイピング</h2>
-                </div>
-                <p class="text-stone-300 text-sm sm:text-base max-w-xl mx-auto">
-                    ハンターの知識とタイピング精度を試せ！<br class="hidden sm:inline">キーボードまたはフリックで読みを入力せよ。
-                </p>
-            </div>
-
-            <!-- 1. Category Selection -->
-            <div class="mb-4 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-mh-gold font-bold text-sm sm:text-base flex items-center gap-2">
-                        <i class="fa-solid fa-scroll"></i> 1. 出題範囲（複数選択可）
-                    </h3>
-                    <button id="btnSelectAll" class="text-xs bg-mh-woodlight hover:bg-stone-700 text-mh-lightgold px-3 py-1 rounded border border-mh-border transition">
-                        すべて選択 / 解除
-                    </button>
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <label class="flex items-center p-3 rounded-lg border border-stone-700 bg-stone-800/80 cursor-pointer hover:border-mh-gold transition">
-                        <input type="checkbox" value="monster" class="category-checkbox w-4 h-4 text-mh-gold rounded focus:ring-mh-gold bg-stone-900 border-stone-600" checked>
-                        <span class="ml-2.5 font-bold text-xs sm:text-sm text-stone-200">🐉 モンスター</span>
-                    </label>
-                    <label class="flex items-center p-3 rounded-lg border border-stone-700 bg-stone-800/80 cursor-pointer hover:border-mh-gold transition">
-                        <input type="checkbox" value="weapon" class="category-checkbox w-4 h-4 text-mh-gold rounded focus:ring-mh-gold bg-stone-900 border-stone-600" checked>
-                        <span class="ml-2.5 font-bold text-xs sm:text-sm text-stone-200">⚔️ 武器</span>
-                    </label>
-                    <label class="flex items-center p-3 rounded-lg border border-stone-700 bg-stone-800/80 cursor-pointer hover:border-mh-gold transition">
-                        <input type="checkbox" value="armor" class="category-checkbox w-4 h-4 text-mh-gold rounded focus:ring-mh-gold bg-stone-900 border-stone-600" checked>
-                        <span class="ml-2.5 font-bold text-xs sm:text-sm text-stone-200">🛡️ 防具</span>
-                    </label>
-                    <label class="flex items-center p-3 rounded-lg border border-stone-700 bg-stone-800/80 cursor-pointer hover:border-mh-gold transition">
-                        <input type="checkbox" value="item" class="category-checkbox w-4 h-4 text-mh-gold rounded focus:ring-mh-gold bg-stone-900 border-stone-600" checked>
-                        <span class="ml-2.5 font-bold text-xs sm:text-sm text-stone-200">🧪 アイテム</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- 2. Difficulty Mode Selection -->
-            <div class="mb-4 bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
-                <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-skull-crossbones"></i> 2. 難易度（判定ルール）
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button type="button" data-diff="easy" class="diff-btn active p-3 rounded-lg text-left border-2 border-mh-gold bg-mh-wood text-mh-lightgold transition relative">
-                        <div class="font-black text-sm sm:text-base text-yellow-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-leaf"></i> かんたん
-                        </div>
-                        <p class="text-xs text-stone-300 mt-1">
-                            モンスター漢字は<strong class="text-yellow-300">「りおれうす」</strong>等のカタカナ名でも<strong class="text-yellow-300">「おすかりゅう」</strong>等の漢字読みでもどちらも正解！
-                        </p>
-                    </button>
-                    <button type="button" data-diff="hard" class="diff-btn p-3 rounded-lg text-left border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition">
-                        <div class="font-black text-sm sm:text-base text-red-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-fire"></i> むずかしい（G級）
-                        </div>
-                        <p class="text-xs text-stone-400 mt-1">
-                            モンスター漢字は<strong class="text-red-300">「おすかりゅう」</strong>などの公式漢字読み限定！カタカナ名は不正解。
-                        </p>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 3. Hint Toggle & Question Count -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <!-- Hint ON/OFF Setting -->
-                <div class="bg-stone-900/90 p-4 rounded-lg border border-stone-700/60 flex flex-col justify-between">
-                    <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-lightbulb"></i> 3. ヒント機能
-                    </h3>
-                    <div class="flex items-center justify-between bg-stone-800/80 p-2.5 rounded-lg border border-stone-700">
-                        <span class="text-xs sm:text-sm text-stone-300 font-bold">1文字目ヒントボタン</span>
-                        <div class="flex gap-2">
-                            <button type="button" id="btnHintOn" class="hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-mh-gold bg-mh-wood text-yellow-400 transition">
-                                ON
-                            </button>
-                            <button type="button" id="btnHintOff" class="hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition">
-                                OFF
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question Count Selector -->
-                <div class="bg-stone-900/90 p-4 rounded-lg border border-stone-700/60">
-                    <h3 class="text-mh-gold font-bold text-sm sm:text-base mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ol"></i> 4. 出題数
-                    </h3>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button type="button" data-count="5" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">5問</button>
-                        <button type="button" data-count="10" class="qcount-btn active py-2 text-center rounded font-bold border-2 border-mh-gold bg-mh-wood text-mh-gold transition text-xs">10問</button>
-                        <button type="button" data-count="20" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">20問</button>
-                        <button type="button" data-count="999" class="qcount-btn py-2 text-center rounded font-bold border border-stone-700 bg-stone-800 text-stone-300 hover:border-mh-gold transition text-xs">全問</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Start Button -->
-            <div class="text-center">
-                <button id="btnStartGame" class="w-full sm:w-80 py-4 px-8 bg-gradient-to-r from-red-950 via-mh-crimson to-red-950 text-mh-lightgold font-black text-xl sm:text-2xl rounded-lg border-2 border-mh-gold shadow-lg hover:brightness-125 transform active:scale-95 transition font-kanji tracking-widest">
-                    クエスト受注（スタート）
-                </button>
-            </div>
-        </section>
-
-
-        <!-- 2. GAMEPLAY SCREEN (TYPING MODE) -->
-        <section id="screenQuiz" class="guild-card rounded-lg p-4 sm:p-6 my-auto hidden">
-            <!-- Game HUD Header -->
-            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-mh-border/60 text-xs sm:text-sm">
-                <div class="flex items-center space-x-2 sm:space-x-3">
-                    <span id="badgeCategory" class="px-2.5 py-1 bg-mh-crimson text-mh-lightgold font-bold rounded text-xs border border-red-500/40">
-                        モンスター
-                    </span>
-                    <span id="badgeDiff" class="px-2.5 py-1 bg-yellow-950 text-yellow-300 font-bold rounded text-xs border border-yellow-600/40">
-                        かんたん
-                    </span>
-                    <span id="badgeHintState" class="px-2 py-1 bg-stone-800 text-stone-300 font-bold rounded text-xs border border-stone-700">
-                        HINT: ON
-                    </span>
-                    <span class="text-stone-300 font-bold ml-1">
-                        第 <span id="textCurrentQ" class="text-mh-gold text-lg font-black">1</span> / <span id="textTotalQ">10</span> 問
-                    </span>
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <div class="text-right">
-                        <span class="text-stone-400 text-xs block">時間</span>
-                        <span id="textTimer" class="text-stone-200 font-mono font-bold text-base">0.0s</span>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-stone-400 text-xs block">コンボ</span>
-                        <span id="textCombo" class="text-mh-gold font-extrabold text-base">0</span>
-                    </div>
-                    <div class="text-right min-w-[60px]">
-                        <span class="text-stone-400 text-xs block">スコア</span>
-                        <span id="textScore" class="text-yellow-400 font-extrabold text-base">0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Target Kanji Display Card -->
-            <div class="bg-gradient-to-b from-stone-900 to-black p-6 sm:p-10 rounded-xl border-2 border-mh-border text-center shadow-inner relative mb-5 overflow-hidden">
-                <div class="absolute top-2 left-3 text-stone-600 text-xs font-mono">TARGET KANJI</div>
-                
-                <div id="targetKanji" class="text-4xl sm:text-6xl font-black text-mh-lightgold font-kanji tracking-wider gold-glow my-2 animate-slash">
-                    ---
-                </div>
-
-                <div id="targetDesc" class="text-stone-400 text-xs sm:text-sm italic min-h-[20px]">
-                    ---
-                </div>
-            </div>
-
-            <!-- Typing Form Input Area -->
-            <form id="formTyping" class="space-y-4 mb-4">
-                <div class="relative">
-                    <input type="text" id="inputKana" placeholder="読みを入力 (例: おすかりゅう / りおれうす)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="w-full bg-stone-900 border-2 border-mh-gold/70 rounded-xl px-4 py-4 text-mh-lightgold font-bold text-xl sm:text-2xl text-center tracking-widest focus:outline-none focus:border-mh-gold focus:ring-2 focus:ring-mh-gold/40 placeholder-stone-600 shadow-inner">
-                </div>
-
-                <div class="flex gap-2">
-                    <button type="button" id="btnHint" class="px-4 py-3 bg-stone-800 hover:bg-stone-700 text-mh-lightgold text-xs sm:text-sm font-bold rounded-lg border border-stone-600 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-lightbulb text-yellow-400"></i> ヒント
-                    </button>
-                    <button type="button" id="btnGiveUp" class="px-4 py-3 bg-stone-800 hover:bg-red-950 text-red-300 text-xs sm:text-sm font-bold rounded-lg border border-stone-600 hover:border-red-500 transition">
-                        降参
-                    </button>
-                    <button type="submit" class="flex-1 py-3 bg-mh-crimson hover:bg-red-700 text-mh-lightgold font-black text-lg rounded-lg border border-red-400 shadow transition font-kanji tracking-widest">
-                        回答する (Enter)
-                    </button>
-                </div>
-            </form>
-
-            <!-- Feedback Message Banner -->
-            <div id="feedbackBanner" class="min-h-[44px] flex items-center justify-center rounded-lg font-bold text-sm sm:text-base transition-all opacity-0">
-                <span id="feedbackText">---</span>
-            </div>
-        </section>
-
-
-        <!-- 3. RESULT / GUILD CARD SCREEN -->
-        <section id="screenResult" class="guild-card rounded-lg p-4 sm:p-8 my-auto hidden">
-            <div class="text-center mb-6">
-                <div class="inline-block border-b-2 border-mh-gold pb-1 mb-2">
-                    <span class="text-xs uppercase tracking-widest text-mh-accent font-bold">Quest Completed</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-mh-lightgold font-cinzel">ハンター検定成績表</h2>
-                </div>
-            </div>
-
-            <!-- Hunter Rank Badge Banner -->
-            <div class="bg-gradient-to-r from-stone-900 via-mh-wood to-stone-900 border-2 border-mh-gold p-6 rounded-xl text-center mb-6 shadow-lg">
-                <p class="text-stone-400 text-xs font-bold mb-1">獲得ハンター称号</p>
-                <div id="resultRankTitle" class="text-2xl sm:text-4xl font-black text-mh-gold font-kanji gold-glow my-2">
-                    G級漢字ハンター
-                </div>
-                <p id="resultRankDesc" class="text-stone-300 text-xs sm:text-sm max-w-md mx-auto mt-2">
-                    見事な解読速度！数多の漢字の読みを熟知した真のハンター。
-                </p>
-            </div>
-
-            <!-- Stats Summary Cards -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6 text-center">
-                <div class="bg-stone-900/90 p-3 rounded-lg border border-stone-700">
-                    <span class="text-stone-400 text-xs block">正解数</span>
-                    <span class="text-lg sm:text-xl font-black text-mh-lightgold"><span id="resCorrect">0</span>/<span id="resTotal">10</span></span>
-                </div>
-                <div class="bg-stone-900/90 p-3 rounded-lg border border-stone-700">
-                    <span class="text-stone-400 text-xs block">正解率</span>
-                    <span id="resAccuracy" class="text-lg sm:text-xl font-black text-emerald-400">0%</span>
-                </div>
-                <div class="bg-stone-900/90 p-3 rounded-lg border border-stone-700">
-                    <span class="text-stone-400 text-xs block">クリア時間</span>
-                    <span id="resTime" class="text-lg sm:text-xl font-black text-stone-200">0.0s</span>
-                </div>
-                <div class="bg-stone-900/90 p-3 rounded-lg border border-stone-700">
-                    <span class="text-stone-400 text-xs block">最終スコア</span>
-                    <span id="resScore" class="text-lg sm:text-xl font-black text-yellow-400">0</span>
-                </div>
-            </div>
-
-            <!-- Review Section -->
-            <div class="mb-6">
-                <h3 class="text-mh-gold font-bold text-sm mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-book-open"></i> 出題の振り返りノート
-                </h3>
-                <div id="reviewContainer" class="max-h-48 overflow-y-auto space-y-2 pr-1">
-                    <!-- Dynamic items -->
-                </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button id="btnRestart" class="flex-1 py-3 bg-mh-crimson hover:bg-red-700 text-mh-lightgold font-extrabold rounded-lg border border-red-400 transition font-kanji text-lg">
-                    <i class="fa-solid fa-rotate-right mr-2"></i> もう一度挑戦
-                </button>
-                <button id="btnShare" class="py-3 px-6 bg-stone-800 hover:bg-stone-700 text-mh-gold font-bold rounded-lg border border-mh-border transition text-sm flex items-center justify-center">
-                    <i class="fa-solid fa-copy mr-2"></i> 結果をコピー
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="text-center text-stone-600 text-xs py-2 mt-4 border-t border-stone-800">
-        Monster Hunter Kanji Typing Quiz Game • Fan-made Web App
-    </footer>
-
-
-    <!-- JAVASCRIPT GAME LOGIC -->
-    <script>
-        // --- 1. CAPCOM MONSTER HUNTER ACCURATE DATABASE ---
-        const KANJI_DATA = [
-            // モンスター (Monsters)
-            { kanji: "雄火竜", kanjiReadings: ["おすかりゅう"], nameReadings: ["リオレウス", "りおれうす"], note: "空の王者", category: "monster" },
-            { kanji: "雌火竜", kanjiReadings: ["めすかりゅう"], nameReadings: ["リオレイア", "りおれいあ"], note: "陸の女王", category: "monster" },
-            { kanji: "迅竜", kanjiReadings: ["じんりゅう"], nameReadings: ["ナルガクルガ", "なるがくるが"], note: "漆黒の疾風", category: "monster" },
-            { kanji: "轟竜", kanjiReadings: ["ごうりゅう"], nameReadings: ["ティガレックス", "てぃがれっくす"], note: "絶対強者", category: "monster" },
-            { kanji: "雷狼竜", kanjiReadings: ["らいろうりゅう"], nameReadings: ["ジンオウガ", "じんおうが"], note: "無双の狩人", category: "monster" },
-            { kanji: "砕竜", kanjiReadings: ["さいりゅう"], nameReadings: ["ブラキディオス", "ぶらきでぃおす"], note: "爆破属性を纏う粘菌の使い手", category: "monster" },
-            { kanji: "滅尽龍", kanjiReadings: ["めつじんりゅう"], nameReadings: ["ネルギガンテ", "ねるぎがんて"], note: "破滅を携えし龍", category: "monster" },
-            { kanji: "怨虎竜", kanjiReadings: ["えんこりゅう", "おんこりゅう"], nameReadings: ["マガイマガド", "まがいまがど"], note: "鎧武者のような狂暴な龍", category: "monster" },
-            { kanji: "泡狐竜", kanjiReadings: ["ほうこりゅう"], nameReadings: ["タマミツネ", "たまみつね"], note: "妖艶なる舞", category: "monster" },
-            { kanji: "爵銀龍", kanjiReadings: ["しゃくぎんりゅう"], nameReadings: ["メル・ゼナ", "める・ぜな", "めるぜな"], note: "王域三公の筆頭", category: "monster" },
-            { kanji: "煌黒龍", kanjiReadings: ["こうこくりゅう"], nameReadings: ["アルバトリオン", "あるばとりおん"], note: "全属性を統べる神", category: "monster" },
-            { kanji: "黒龍", kanjiReadings: ["こくりゅう"], nameReadings: ["ミラボレアス", "みらぼれあす"], note: "災厄の象徴", category: "monster" },
-            { kanji: "角竜", kanjiReadings: ["かくりゅう"], nameReadings: ["ディアブロス", "でぃあぶろす"], note: "砂漠の暴君", category: "monster" },
-            { kanji: "恐暴竜", kanjiReadings: ["きょうぼうりゅう"], nameReadings: ["イビルジョー", "いびるじょー"], note: "貪食の恐王", category: "monster" },
-            { kanji: "天彗龍", kanjiReadings: ["てんすいりゅう"], nameReadings: ["バルファルク", "ばるふぁるく"], note: "銀翼の凶星", category: "monster" },
-            { kanji: "氷牙竜", kanjiReadings: ["ひょうがりゅう"], nameReadings: ["ベリオロス", "べりおろす"], note: "極氷の騎士", category: "monster" },
-            { kanji: "蛮顎竜", kanjiReadings: ["ばんがくりゅう"], nameReadings: ["アンジャナフ", "あんじゃなふ"], note: "古代樹の森の捕食者", category: "monster" },
-
-            // アイテム (Items)
-            { kanji: "回復薬", kanjiReadings: ["かいふくやく"], nameReadings: [], note: "体力を少し回復する", category: "item" },
-            { kanji: "鬼人薬", kanjiReadings: ["きじんやく"], nameReadings: [], note: "攻撃力を高める薬品", category: "item" },
-            { kanji: "硬化薬", kanjiReadings: ["こうかやく"], nameReadings: [], note: "防御力を高める薬品", category: "item" },
-            { kanji: "秘薬", kanjiReadings: ["ひやく"], note: "体力最大値を上昇させ全回復", category: "item" },
-            { kanji: "こんがり肉", kanjiReadings: ["こんがりにく"], nameReadings: [], note: "スタミナ最大値を増やす", category: "item" },
-            { kanji: "砥石", kanjiReadings: ["といし"], nameReadings: [], note: "武器の切れ味を回復する", category: "item" },
-            { kanji: "閃光玉", kanjiReadings: ["せんこうだま"], nameReadings: [], note: "強烈な光で目のくらみを誘う", category: "item" },
-            { kanji: "捕獲用麻酔玉", kanjiReadings: ["ほかくようますいだま"], nameReadings: [], note: "弱ったモンスターを捕獲する", category: "item" },
-            { kanji: "大タル爆弾", kanjiReadings: ["おおたるばくだん"], nameReadings: [], note: "設置型の強力な爆弾", category: "item" },
-
-            // 武器・防具 (Weapons & Armor)
-            { kanji: "竜のあぎと", kanjiReadings: ["りゅうのあぎと"], nameReadings: [], note: "伝統の大剣", category: "weapon" },
-            { kanji: "飛竜刀", kanjiReadings: ["ひりゅうとう"], nameReadings: [], note: "火竜の素材を用いた太刀", category: "weapon" },
-            { kanji: "封龍剣", kanjiReadings: ["ふうりゅうけん"], nameReadings: [], note: "龍封力を宿す伝説の双剣", category: "weapon" },
-            { kanji: "角王剣", kanjiReadings: ["かくおうけん"], nameReadings: [], note: "角竜の角から作られた巨大大剣", category: "weapon" },
-            { kanji: "覇弓", kanjiReadings: ["はきゅう"], nameReadings: [], note: "覇竜の力を宿す弓", category: "weapon" },
-            { kanji: "護石", kanjiReadings: ["ごせき"], nameReadings: [], note: "スキルを発動させる装備品", category: "armor" },
-            { kanji: "竜王の眼帯", kanjiReadings: ["りゅうおうのがんたい"], nameReadings: [], note: "弱点特効が付く有名な頭装備", category: "armor" },
-            { kanji: "斉天", kanjiReadings: ["せいてん"], nameReadings: [], note: "金獅子の力を宿す防具", category: "armor" }
-        ];
-
-        // --- 2. SOUND SYSTEM (Web Audio API) ---
-        class SoundSystem {
-            constructor() {
-                this.enabled = true;
-                this.ctx = null;
-            }
-
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            }
-
-            playCorrect() {
-                if (!this.enabled) return;
-                this.init();
-                const now = this.ctx.currentTime;
-                
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(587.33, now); // D5
-                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.18); // D6
-
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            }
-
-            playWrong() {
-                if (!this.enabled) return;
-                this.init();
-                const now = this.ctx.currentTime;
-                
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(160, now);
-                osc.frequency.exponentialRampToValueAtTime(70, now + 0.3);
-
-                gain.gain.setValueAtTime(0.35, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            }
-        }
-
-        const sound = new SoundSystem();
-
-        // --- 3. STATE & DOM REFERENCES ---
-        const state = {
-            difficulty: 'easy', // 'easy' or 'hard'
-            hintEnabled: true,  // Hint ON/OFF toggle
-            questionCountSetting: 10,
-            questions: [],
-            currentIndex: 0,
-            score: 0,
-            combo: 0,
-            maxCombo: 0,
-            correctCount: 0,
-            userAnswers: [],
-            isAnsweringAllowed: false,
-            startTime: 0,
-            timerInterval: null,
-            elapsedSeconds: 0
-        };
-
-        const elScreenStart = document.getElementById('screenStart');
-        const elScreenQuiz = document.getElementById('screenQuiz');
-        const elScreenResult = document.getElementById('screenResult');
-
-        const elBadgeCategory = document.getElementById('badgeCategory');
-        const elBadgeDiff = document.getElementById('badgeDiff');
-        const elBadgeHintState = document.getElementById('badgeHintState');
-        const elCurrentQ = document.getElementById('textCurrentQ');
-        const elTotalQ = document.getElementById('textTotalQ');
-        const elTimer = document.getElementById('textTimer');
-        const elCombo = document.getElementById('textCombo');
-        const elScore = document.getElementById('textScore');
-
-        const elTargetKanji = document.getElementById('targetKanji');
-        const elTargetDesc = document.getElementById('targetDesc');
-
-        const elInputKana = document.getElementById('inputKana');
-        const elFormTyping = document.getElementById('formTyping');
-        const elBtnHint = document.getElementById('btnHint');
-
-        const elFeedbackBanner = document.getElementById('feedbackBanner');
-        const elFeedbackText = document.getElementById('feedbackText');
-
-        // --- 4. LISTENERS ---
-        window.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            // Sound button toggle
-            document.getElementById('soundToggle').addEventListener('click', () => {
-                sound.enabled = !sound.enabled;
-                const icon = document.getElementById('soundIcon');
-                const text = document.getElementById('soundText');
-                if (sound.enabled) {
-                    icon.className = "fa-solid fa-volume-high";
-                    text.textContent = "SOUND ON";
-                } else {
-                    icon.className = "fa-solid fa-volume-xmark";
-                    text.textContent = "MUTED";
-                }
-            });
-
-            // Toggle category check all
-            document.getElementById('btnSelectAll').addEventListener('click', () => {
-                const checkboxes = document.querySelectorAll('.category-checkbox');
-                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                checkboxes.forEach(cb => cb.checked = !allChecked);
-            });
-
-            // Difficulty Buttons Switch
-            document.querySelectorAll('.diff-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.diff-btn').forEach(b => {
-                        b.classList.remove('active', 'border-2', 'border-mh-gold', 'bg-mh-wood', 'text-mh-lightgold');
-                        b.classList.add('border', 'border-stone-700', 'bg-stone-800', 'text-stone-300');
-                    });
-                    const target = e.currentTarget;
-                    target.classList.remove('border', 'border-stone-700', 'bg-stone-800', 'text-stone-300');
-                    target.classList.add('active', 'border-2', 'border-mh-gold', 'bg-mh-wood', 'text-mh-lightgold');
-                    state.difficulty = target.dataset.diff;
-                });
-            });
-
-            // Hint ON/OFF Setting Buttons
-            const btnHintOn = document.getElementById('btnHintOn');
-            const btnHintOff = document.getElementById('btnHintOff');
-
-            btnHintOn.addEventListener('click', () => {
-                state.hintEnabled = true;
-                btnHintOn.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-mh-gold bg-mh-wood text-yellow-400 transition";
-                btnHintOff.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition";
-            });
-
-            btnHintOff.addEventListener('click', () => {
-                state.hintEnabled = false;
-                btnHintOff.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border-2 border-red-500 bg-red-950 text-red-300 transition";
-                btnHintOn.className = "hint-setting-btn px-4 py-1.5 rounded font-bold text-xs border border-stone-700 bg-stone-900 text-stone-500 hover:text-stone-300 transition";
-            });
-
-            // Question Count Selector
-            document.querySelectorAll('.qcount-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.qcount-btn').forEach(b => {
-                        b.classList.remove('active', 'border-2', 'border-mh-gold', 'bg-mh-wood', 'text-mh-gold');
-                        b.classList.add('border', 'border-stone-700', 'bg-stone-800', 'text-stone-300');
-                    });
-                    e.currentTarget.classList.remove('border', 'border-stone-700', 'bg-stone-800', 'text-stone-300');
-                    e.currentTarget.classList.add('active', 'border-2', 'border-mh-gold', 'bg-mh-wood', 'text-mh-gold');
-                    state.questionCountSetting = parseInt(e.currentTarget.dataset.count);
-                });
-            });
-
-            // Game Start Button
-            document.getElementById('btnStartGame').addEventListener('click', startGame);
-
-            // Typing submission
-            elFormTyping.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (!state.isAnsweringAllowed) return;
-                const val = elInputKana.value.trim();
-                if (val) {
-                    checkAnswer(val);
-                }
-            });
-
-            // Hint Button in Game
-            elBtnHint.addEventListener('click', () => {
-                if (!state.isAnsweringAllowed || !state.hintEnabled) return;
-                const q = state.questions[state.currentIndex];
-                const mainReading = q.kanjiReadings[0];
-                showFeedback(true, `💡 ヒント (1文字目): 「 ${mainReading.charAt(0)} 」`, false);
-            });
-
-            // Give Up Button
-            document.getElementById('btnGiveUp').addEventListener('click', () => {
-                if (!state.isAnsweringAllowed) return;
-                checkAnswer("【降参】");
-            });
-
-            // Restart & Share
-            document.getElementById('btnRestart').addEventListener('click', () => {
-                elScreenResult.classList.add('hidden');
-                elScreenStart.classList.remove('hidden');
-            });
-
-            document.getElementById('btnShare').addEventListener('click', () => {
-                const total = state.questions.length;
-                const modeStr = state.difficulty === 'easy' ? 'かんたん' : 'むずかしい(G級)';
-                const hintStr = state.hintEnabled ? 'ヒントあり' : 'ヒントなし';
-                const text = `【モンハン漢字タイピング検定 (${modeStr} / ${hintStr})】\n称号: ${document.getElementById('resultRankTitle').textContent}\n正解率: ${document.getElementById('resAccuracy').textContent} (${state.correctCount}/${total})\nタイム: ${state.elapsedSeconds.toFixed(1)}s | スコア: ${state.score}pt\n#モンハン漢字クイズ #MHタイピング`;
-                
-                const dummy = document.createElement("textarea");
-                document.body.appendChild(dummy);
-                dummy.value = text;
-                dummy.select();
-                document.execCommand("copy");
-                document.body.removeChild(dummy);
-                alert("結果をクリップボードにコピーしました！");
-            });
-        }
-
-
-        // --- 5. GAME FLOW & TIMER LOGIC ---
-
-        function startGame() {
-            const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
-                .map(cb => cb.value);
-
-            if (selectedCategories.length === 0) {
-                alert("出題範囲を1つ以上選択してください。");
-                return;
-            }
-
-            const filtered = KANJI_DATA.filter(item => selectedCategories.includes(item.category));
-            if (filtered.length === 0) {
-                alert("該当する問題が見つかりませんでした。");
-                return;
-            }
-
-            const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-            const count = Math.min(state.questionCountSetting, shuffled.length);
-            state.questions = shuffled.slice(0, count);
-
-            // Reset Game Stats
-            state.currentIndex = 0;
-            state.score = 0;
-            state.combo = 0;
-            state.maxCombo = 0;
-            state.correctCount = 0;
-            state.userAnswers = [];
-            state.elapsedSeconds = 0;
-
-            // Start Timer
-            state.startTime = Date.now();
-            clearInterval(state.timerInterval);
-            state.timerInterval = setInterval(() => {
-                state.elapsedSeconds = (Date.now() - state.startTime) / 1000;
-                elTimer.textContent = `${state.elapsedSeconds.toFixed(1)}s`;
-            }, 100);
-
-            // UI Switch
-            elScreenStart.classList.add('hidden');
-            elScreenResult.classList.add('hidden');
-            elScreenQuiz.classList.remove('hidden');
-
-            elTotalQ.textContent = state.questions.length;
-            updateHud();
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            state.isAnsweringAllowed = true;
-            const q = state.questions[state.currentIndex];
-
-            const categoryLabels = {
-                monster: "🐉 モンスター",
-                weapon: "⚔️ 武器",
-                armor: "🛡️ 防具",
-                item: "🧪 アイテム"
-            };
-            elBadgeCategory.textContent = categoryLabels[q.category] || q.category;
-
-            if (state.difficulty === 'easy') {
-                elBadgeDiff.textContent = "かんたん";
-                elBadgeDiff.className = "px-2.5 py-1 bg-yellow-950 text-yellow-300 font-bold rounded text-xs border border-yellow-600/40";
-            } else {
-                elBadgeDiff.textContent = "むずかしい (G級)";
-                elBadgeDiff.className = "px-2.5 py-1 bg-red-950 text-red-300 font-bold rounded text-xs border border-red-600/40";
-            }
-
-            // Hint state badge & button toggle
-            if (state.hintEnabled) {
-                elBadgeHintState.textContent = "HINT: ON";
-                elBadgeHintState.className = "px-2 py-1 bg-amber-950 text-amber-300 font-bold rounded text-xs border border-amber-600/40";
-                elBtnHint.disabled = false;
-                elBtnHint.className = "px-4 py-3 bg-stone-800 hover:bg-stone-700 text-mh-lightgold text-xs sm:text-sm font-bold rounded-lg border border-stone-600 transition flex items-center gap-1.5 cursor-pointer";
-            } else {
-                elBadgeHintState.textContent = "HINT: OFF";
-                elBadgeHintState.className = "px-2 py-1 bg-stone-900 text-stone-500 font-bold rounded text-xs border border-stone-800";
-                elBtnHint.disabled = true;
-                elBtnHint.className = "px-4 py-3 bg-stone-900 text-stone-600 text-xs sm:text-sm font-bold rounded-lg border border-stone-800 cursor-not-allowed flex items-center gap-1.5";
-            }
-
-            // Animate target text
-            elTargetKanji.classList.remove('animate-slash');
-            void elTargetKanji.offsetWidth; // trigger reflow
-            elTargetKanji.classList.add('animate-slash');
-            elTargetKanji.textContent = q.kanji;
-            
-            elTargetDesc.textContent = `ヒント: ${q.note}`;
-
-            // Reset Input & Focus
-            elInputKana.value = '';
-            elInputKana.focus();
-
-            // Clear feedback
-            elFeedbackBanner.className = "min-h-[44px] flex items-center justify-center rounded-lg font-bold text-sm sm:text-base transition-all opacity-0";
-
-            elCurrentQ.textContent = state.currentIndex + 1;
-        }
-
-        // Convert Katakana to Hiragana & normalize spaces
-        function normalizeKana(str) {
-            return str
-                .trim()
-                .toLowerCase()
-                .replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60)) // Kata -> Hira
-                .replace(/[\s　・]/g, ''); // strip spaces & middle dots
-        }
-
-        function checkAnswer(userInput) {
-            state.isAnsweringAllowed = false;
-            const currentQ = state.questions[state.currentIndex];
-            const normalizedUser = normalizeKana(userInput);
-
-            // Determine valid answer list based on difficulty
-            let allowedReadings = [...currentQ.kanjiReadings];
-            if (state.difficulty === 'easy' && currentQ.category === 'monster') {
-                allowedReadings = allowedReadings.concat(currentQ.nameReadings);
-            }
-
-            const isCorrect = allowedReadings.some(r => normalizeKana(r) === normalizedUser);
-
-            if (isCorrect) {
-                sound.playCorrect();
-                state.correctCount++;
-                state.combo++;
-                if (state.combo > state.maxCombo) state.maxCombo = state.combo;
-
-                const points = 100 + (state.combo - 1) * 25;
-                state.score += points;
-
-                showFeedback(true, `正解！ (+${points}pt)`, true);
-            } else {
-                sound.playWrong();
-                state.combo = 0;
-                
-                const mainAnswer = currentQ.kanjiReadings[0];
-                let displayCorrect = `正解: 「${mainAnswer}」`;
-                if (state.difficulty === 'easy' && currentQ.nameReadings.length > 0) {
-                    displayCorrect += ` または 「${currentQ.nameReadings[0]}」`;
-                }
-
-                showFeedback(false, `不正解... ${displayCorrect}`, true);
-
-                elInputKana.classList.add('animate-shake');
-                setTimeout(() => elInputKana.classList.remove('animate-shake'), 400);
-            }
-
-            state.userAnswers.push({
-                question: currentQ,
-                isCorrect: isCorrect,
-                userInput: userInput
-            });
-
-            updateHud();
-
-            // Delay for next question
-            setTimeout(() => {
-                state.currentIndex++;
-                if (state.currentIndex < state.questions.length) {
-                    loadQuestion();
-                } else {
-                    finishGame();
-                }
-            }, 1500);
-        }
-
-        function showFeedback(isCorrect, message, persistent = true) {
-            elFeedbackText.textContent = message;
-            if (isCorrect) {
-                elFeedbackBanner.className = "min-h-[44px] flex items-center justify-center rounded-lg font-bold text-sm sm:text-base transition-all opacity-100 bg-emerald-950/90 text-emerald-300 border border-emerald-500/60";
-            } else {
-                elFeedbackBanner.className = "min-h-[44px] flex items-center justify-center rounded-lg font-bold text-sm sm:text-base transition-all opacity-100 bg-red-950/90 text-red-200 border border-red-500/60";
-            }
-        }
-
-        function updateHud() {
-            elScore.textContent = state.score;
-            elCombo.textContent = state.combo;
-        }
-
-        function finishGame() {
-            clearInterval(state.timerInterval);
-            elScreenQuiz.classList.add('hidden');
-            elScreenResult.classList.remove('hidden');
-
-            const total = state.questions.length;
-            const accuracy = Math.round((state.correctCount / total) * 100);
-
-            document.getElementById('resCorrect').textContent = state.correctCount;
-            document.getElementById('resTotal').textContent = total;
-            document.getElementById('resAccuracy').textContent = `${accuracy}%`;
-            document.getElementById('resTime').textContent = `${state.elapsedSeconds.toFixed(1)}s`;
-            document.getElementById('resScore').textContent = state.score;
-
-            // Determine Hunter Rank & Title
-            let rankTitle = "";
-            let rankDesc = "";
-
-            if (accuracy === 100) {
-                rankTitle = "👑 漢字ハンターマスター (HR999)";
-                rankDesc = "完璧なる知識とタイピング速度！古龍級の解読能力を持つ伝説のハンター！";
-            } else if (accuracy >= 80) {
-                rankTitle = "⚔️ G級漢字ハンター (HR100)";
-                rankDesc = "見事な解読速度！数多のモンスターのルビを難なく入力できる熟練者。";
-            } else if (accuracy >= 60) {
-                rankTitle = "🛡️ 上位ハンター (HR50)";
-                rankDesc = "確かな知識！タイピング精度をさらに磨いてG級昇格を目指せ！";
-            } else if (accuracy >= 40) {
-                rankTitle = "🏹 下位ハンター (HR10)";
-                rankDesc = "基本知識あり！復習ノートを活用して知識と速度を蓄えよう。";
-            } else {
-                rankTitle = "🐾 見習いタイパーハンター (HR1)";
-                rankDesc = "伸びしろ抜群！アイルーたちと一緒に特訓し直そう！";
-            }
-
-            document.getElementById('resultRankTitle').textContent = rankTitle;
-            document.getElementById('resultRankDesc').textContent = rankDesc;
-
-            // Build Review Items
-            const reviewContainer = document.getElementById('reviewContainer');
-            reviewContainer.innerHTML = '';
-
-            state.userAnswers.forEach((ans) => {
-                const item = document.createElement('div');
-                item.className = `p-2.5 rounded border flex justify-between items-center text-xs sm:text-sm ${
-                    ans.isCorrect ? 'bg-stone-900/90 border-stone-800' : 'bg-red-950/40 border-red-900/50'
-                }`;
-
-                let validAnswersStr = ans.question.kanjiReadings.join(' / ');
-                if (state.difficulty === 'easy' && ans.question.nameReadings.length > 0) {
-                    validAnswersStr += ` (または ${ans.question.nameReadings[0]})`;
-                }
-
-                item.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold ${ans.isCorrect ? 'text-emerald-400' : 'text-red-400'}">
-                            ${ans.isCorrect ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-xmark"></i>'}
-                        </span>
-                        <div>
-                            <span class="font-bold text-mh-lightgold font-kanji">${ans.question.kanji}</span>
-                            <span class="text-stone-300 ml-2">【${validAnswersStr}】</span>
-                            <span class="text-stone-500 text-xs block sm:inline sm:ml-2">(${ans.question.note})</span>
-                        </div>
-                    </div>
-                `;
-                reviewContainer.appendChild(item);
-            });
-        }
-    </script>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-title">💡 ヒント機能</div>
+      <div class="options-grid" id="optHint">
+        <div class="btn-radio selected" data-value="on">ON</div>
+        <div class="btn-radio" data-value="off">OFF (封印)</div>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-title">🎯 出題数</div>
+      <div class="options-grid" id="optCount">
+        <div class="btn-radio selected" data-value="5">5問</div>
+        <div class="btn-radio" data-value="10">10問</div>
+        <div class="btn-radio" data-value="20">20問</div>
+        <div class="btn-radio" data-value="50">50問</div>
+      </div>
+    </div>
+
+    <button class="btn-action" id="btnStart">クエスト受注（開始）</button>
+  </div>
+
+  <!-- プレイ画面 -->
+  <div id="screenPlay" class="screen">
+    <div class="hud">
+      <div>問題: <span id="hudCurrent" class="hud-val">1</span> / <span id="hudTotal" class="hud-val">10</span></div>
+      <div>難易度: <span id="hudDiff" class="hud-val">かんたん</span></div>
+      <div>ヒント: <span id="hudHintStatus" class="hud-val">ON</span></div>
+    </div>
+
+    <div class="question-box">
+      <div class="q-category" id="qCategory">モンスター</div>
+      <div class="q-kanji" id="qKanji">雄火竜</div>
+      <div class="q-hint" id="qHint"></div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="answerInput" placeholder="読みを入力（ひらがな・カタカナ）" autocomplete="off" />
+      <button class="btn-sub" id="btnSubmit">解答</button>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+      <button class="btn-sub" id="btnHint" style="flex:1;">💡 1文字目ヒント</button>
+      <button class="btn-sub" id="btnGiveUp" style="flex:1;">🏳️ 降参（答えを見る）</button>
+    </div>
+
+    <div class="msg-area" id="msgArea"></div>
+  </div>
+
+  <!-- リザルト画面 -->
+  <div id="screenResult" class="screen">
+    <div class="result-rank">
+      <div class="rank-title">ハンター称号授与</div>
+      <div class="rank-name" id="resultRank">G級ハンター</div>
+    </div>
+
+    <div class="score-detail">
+      正解数: <span id="resCorrect">0</span> / <span id="resTotal">0</span> 問<br>
+      正答率: <span id="resRate">0</span> %
+    </div>
+
+    <div class="review-list" id="reviewList"></div>
+
+    <button class="btn-action" id="btnRestart">拠点に戻る（再挑戦）</button>
+  </div>
+</div>
+
+<script>
+// --- 全モンスター網羅データベース (160種超) ---
+const KANJI_DATABASE = [
+  // 【初代〜Pシリーズ】
+  { kanji: "雄火竜", read: "おすかりゅう", katakana: "りおれうす", cat: "monster" },
+  { kanji: "雌火竜", read: "めすかりゅう", katakana: "りおれいあ", cat: "monster" },
+  { kanji: "角竜", read: "かくりゅう", katakana: "でぃあぶろす", cat: "monster" },
+  { kanji: "黒角竜", read: "こくかくりゅう", katakana: "でぃあぶろすあしゅ", cat: "monster" },
+  { kanji: "一角竜", read: "いっかくりゅう", katakana: "ものぶろす", cat: "monster" },
+  { kanji: "白一角竜", read: "はくいっかくりゅう", katakana: "ものぶろすあしゅ", cat: "monster" },
+  { kanji: "岩竜", read: "がんりゅう", katakana: "ばさるもす", cat: "monster" },
+  { kanji: "鎧竜", read: "がいりゅう", katakana: "ぐらびもす", cat: "monster" },
+  { kanji: "黒鎧竜", read: "こくがいりゅう", katakana: "ぐらびもすあしゅ", cat: "monster" },
+  { kanji: "毒怪鳥", read: "どくかいちょう", katakana: "げりょす", cat: "monster" },
+  { kanji: "紫毒怪鳥", read: "しどくかいちょう", katakana: "げりょすあしゅ", cat: "monster" },
+  { kanji: "怪鳥", read: "かいちょう", katakana: "いゃんくっく", cat: "monster" },
+  { kanji: "青怪鳥", read: "せいかいちょう", katakana: "いゃんくっくあしゅ", cat: "monster" },
+  { kanji: "黒狼鳥", read: "こくろうちょう", katakana: "いゃんがるるが", cat: "monster" },
+  { kanji: "水竜", read: "すいりゅう", katakana: "がのととす", cat: "monster" },
+  { kanji: "翠水竜", read: "すいすいりゅう", katakana: "がのととすあしゅ", cat: "monster" },
+  { kanji: "沙竜", read: "さりゅう", katakana: "どすがれおす", cat: "monster" },
+  { kanji: "眠鳥", read: "みんちょう", katakana: "ひぷのっく", cat: "monster" },
+  { kanji: "雪獅子", read: "ゆきじし", katakana: "どどぶらんご", cat: "monster" },
+  { kanji: "金獅子", read: "きんじし", katakana: "らーじゃん", cat: "monster" },
+  { kanji: "激昂した金獅子", read: "げきこうしたきんじし", katakana: "げきこうらーじゃん", cat: "monster" },
+  { kanji: "桃毛獣", read: "ももけじゅう", katakana: "ばばこんが", cat: "monster" },
+  { kanji: "緑毛獣", read: "りょくもうじゅう", katakana: "ばばこんがあしゅ", cat: "monster" },
+  { kanji: "奇面族", read: "きめんぞく", katakana: "ちゃちゃぶー", cat: "monster" },
+  { kanji: "轟竜", read: "ごうりゅう", katakana: "てぃがれっくす", cat: "monster" },
+  { kanji: "黒轟竜", read: "こくごうりゅう", katakana: "てぃがれっくすあしゅ", cat: "monster" },
+  { kanji: "大轟竜", read: "だいごうりゅう", katakana: "てぃがれっくすきしょうしゅ", cat: "monster" },
+  { kanji: "迅竜", read: "じんりゅう", katakana: "なるがくるが", cat: "monster" },
+  { kanji: "緑迅竜", read: "りょくじんりゅう", katakana: "なるがくるがあしゅ", cat: "monster" },
+  { kanji: "月迅竜", read: "げつじんりゅう", katakana: "なるがくるがきしょうしゅ", cat: "monster" },
+  { kanji: "覇竜", read: "はりゅう", katakana: "あかむとるむ", cat: "monster" },
+  { kanji: "崩竜", read: "ほうりゅう", katakana: "うかむるばす", cat: "monster" },
+  { kanji: "老山龍", read: "ろうざんりゅう", katakana: "らおしゃんろん", cat: "monster" },
+  { kanji: "砦蟹", read: "さいかい", katakana: "しぇんがおれん", cat: "monster" },
+  { kanji: "黒龍", read: "こくりゅう", katakana: "みらぼれあす", cat: "monster" },
+  { kanji: "紅龍", read: "こうりゅう", katakana: "みらばるかん", cat: "monster" },
+  { kanji: "祖龍", read: "そりゅう", katakana: "みらるーつ", cat: "monster" },
+
+  // 【3 / 3G / 4 / 4G】
+  { kanji: "海竜", read: "かいりゅう", katakana: "らぎあくるす", cat: "monster" },
+  { kanji: "白海竜", read: "はくかいりゅう", katakana: "らぎあくるすあしゅ", cat: "monster" },
+  { kanji: "冥海竜", read: "めいかいりゅう", katakana: "らぎあくるすきしょうしゅ", cat: "monster" },
+  { kanji: "炎戈竜", read: "えんかりゅう", katakana: "あぐなかむとる", cat: "monster" },
+  { kanji: "凍戈竜", read: "とうかりゅう", katakana: "あぐなかむとるあしゅ", cat: "monster" },
+  { kanji: "潜口竜", read: "せんこうりゅう", katakana: "はぷぼっか", cat: "monster" },
+  { kanji: "彩鳥", read: "さいちょう", katakana: "くるぺっこ", cat: "monster" },
+  { kanji: "紅彩鳥", read: "こうさいちょう", katakana: "くるぺっこあしゅ", cat: "monster" },
+  { kanji: "土砂竜", read: "どしゃりゅう", katakana: "ぼるぼろす", cat: "monster" },
+  { kanji: "氷砕竜", read: "ひょうさいりゅう", katakana: "ぼるぼろすあしゅ", cat: "monster" },
+  { kanji: "爆鎚竜", read: "ばくついりゅう", katakana: "うらがんきん", cat: "monster" },
+  { kanji: "鋼鎚竜", read: "こうついりゅう", katakana: "うらがんきんあしゅ", cat: "monster" },
+  { kanji: "毒狗竜", read: "どくくりゅう", katakana: "どすばぎぃ", cat: "monster" },
+  { kanji: "眠狗竜", read: "みんくりゅう", katakana: "どすいーおす", cat: "monster" },
+  { kanji: "赤甲獣", read: "せきこうじゅう", katakana: "らんぐろとら", cat: "monster" },
+  { kanji: "白うさぎ獣", read: "しろうさぎじゅう", katakana: "うるくすす", cat: "monster" },
+  { kanji: "青熊獣", read: "せいゆうじゅう", katakana: "あおあしら", cat: "monster" },
+  { kanji: "雷狼竜", read: "らいろうりゅう", katakana: "じんおうが", cat: "monster" },
+  { kanji: "獄狼竜", read: "ごくろうりゅう", katakana: "じんおうがあしゅ", cat: "monster" },
+  { kanji: "碎竜", read: "さいりゅう", katakana: "ぶらきでぃおす", cat: "monster" },
+  { kanji: "恐暴竜", read: "きょうぼうりゅう", katakana: "いびるじょー", cat: "monster" },
+  { kanji: "怒れる喰らう恐暴竜", read: "いかれるくらうきょうぼうりゅう", katakana: "いかれるいびるじょー", cat: "monster" },
+  { kanji: "大海龍", read: "たいかいりゅう", katakana: "なばるでうす", cat: "monster" },
+  { kanji: "皇海龍", read: "こうかいりゅう", katakana: "なばるでうすあしゅ", cat: "monster" },
+  { kanji: "煌黒龍", read: "こうこくりゅう", katakana: "あるばとりおん", cat: "monster" },
+  { kanji: "煉黒龍", read: "れんこくりゅう", katakana: "ぐらん・みらおす", cat: "monster" },
+  { kanji: "黒蝕竜", read: "こくしょくりゅう", katakana: "ごあ・まがら", cat: "monster" },
+  { kanji: "天廻龍", read: "てんかいりゅう", katakana: "しゃがるまがら", cat: "monster" },
+  { kanji: "混沌に呻く黒蝕竜", read: "こんとんにうめくこくしょくりゅう", katakana: "こんとんごあまがら", cat: "monster" },
+  { kanji: "千刃竜", read: "せんじんりゅう", katakana: "せるれぎおす", cat: "monster" },
+  { kanji: "蛇王龍", read: "じゃおうりゅう", katakana: "だら・あまぢゅら", cat: "monster" },
+  { kanji: "蛇帝龍", read: "じゃていりゅう", katakana: "だら・あまぢゅらあしゅ", cat: "monster" },
+  { kanji: "巨戟龍", read: "きょげきりゅう", katakana: "ごぐまじおす", cat: "monster" },
+  { kanji: "化け鮫", read: "ばけざめ", katakana: "ざぼあざぎる", cat: "monster" },
+  { kanji: "虎鮫", read: "とらざめ", katakana: "ざぼあざぎるあしゅ", cat: "monster" },
+  { kanji: "影蜘蛛", read: "かげぐも", katakana: "ねるすきゅら", cat: "monster" },
+  { kanji: "骸龍", read: "がいりゅう", katakana: "おすとがらあす", cat: "monster" },
+
+  // 【クロス / ダブルクロス（二つ名・特異個体）】
+  { kanji: "斬竜", read: "ざんりゅう", katakana: "でぃのばるど", cat: "monster" },
+  { kanji: "巨獣", read: "きょじゅう", katakana: "がむーと", cat: "monster" },
+  { kanji: "電主", read: "でんしゅ", katakana: "らいぜくす", cat: "monster" },
+  { kanji: "泡狐竜", read: "ほうこりゅう", katakana: "たまみつね", cat: "monster" },
+  { kanji: "天彗龍", read: "てんすいりゅう", katakana: "ばるふぁるく", cat: "monster" },
+  { kanji: "鏖魔", read: "おうま", katakana: "でぃあぶろす", cat: "monster" },
+  { kanji: "燼滅刃", read: "じんめつじん", katakana: "でぃのばるど", cat: "monster" },
+  { kanji: "銀嶺", read: "ぎんれい", katakana: "がむーと", cat: "monster" },
+  { kanji: "青電主", read: "せいでんしゅ", katakana: "らいぜくす", cat: "monster" },
+  { kanji: "天眼", read: "てんがん", katakana: "たまみつね", cat: "monster" },
+  { kanji: "隻眼", read: "せきがん", katakana: "いゃんガルルガ", cat: "monster" },
+  { kanji: "荒鉤爪", read: "あらかぎづめ", katakana: "てぃがれっくす", cat: "monster" },
+  { kanji: "白疾風", read: "しろはやて", katakana: "なるがくるが", cat: "monster" },
+  { kanji: "金雷公", read: "きんらいこう", katakana: "じんおうが", cat: "monster" },
+  { kanji: "紫毒姫", read: "しどくひめ", katakana: "りおれいあ", cat: "monster" },
+  { kanji: "黒炎王", read: "こくえんおう", katakana: "りおれうす", cat: "monster" },
+  { kanji: "岩穿", read: "いわうがち", katakana: "てつつかぶら", cat: "monster" },
+  { kanji: "宝纏", read: "たからまとい", katakana: "うらがんきん", cat: "monster" },
+  { kanji: "矛砕", read: "ほこくだき", katakana: "だいみょうざざみ", cat: "monster" },
+  { kanji: "鎧裂", read: "よろいざき", katakana: "ぎざみ", cat: "monster" },
+  { kanji: "朧隠", read: "おぼろがくれ", katakana: "ほろろほぐるる", cat: "monster" },
+  { kanji: "狂走竜", read: "きょうそうりゅう", katakana: "げねぽす", cat: "monster" },
+
+  // 【ワールド / アイスボーン】
+  { kanji: "滅尽龍", read: "めつじんりゅう", katakana: "ねるぎがんて", cat: "monster" },
+  { kanji: "悉くを喰らう滅尽龍", read: "ことごとくをくらうめつじんりゅう", katakana: "ことごとくねるぎがんて", cat: "monster" },
+  { kanji: "熔山龍", read: "ようざんりゅう", katakana: "ぞら・まぐだらおす", cat: "monster" },
+  { kanji: "屍套龍", read: "しとうりゅう", katakana: "ヴァルハザク", cat: "monster" },
+  { kanji: "死を纏う屍套龍", read: "しをまとうしとうりゅう", katakana: "しをまとうヴァルハザク", cat: "monster" },
+  { kanji: "冥灯龍", read: "めいとうりゅう", katakana: "ゼノ・ジーヴァ", cat: "monster" },
+  { kanji: "赤龍", read: "せきりゅう", katakana: "ムフェト・ジーヴァ", cat: "monster" },
+  { kanji: "地煌龍", read: "ちこうりゅう", katakana: "アン・イシュワルダ", cat: "monster" },
+  { kanji: "冰龍", read: "ひょうりゅう", katakana: "イヴェルカーナ", cat: "monster" },
+  { kanji: "蛮顎竜", read: "ばんがくりゅう", katakana: "アンジャナフ", cat: "monster" },
+  { kanji: "雷顎竜", read: "らいがくりゅう", katakana: "アンジャナフ亜種", cat: "monster" },
+  { kanji: "飛雷竜", read: "ひらいりゅう", katakana: "トビカガチ", cat: "monster" },
+  { kanji: "痺賊竜", read: "ひぞくりゅう", katakana: "ドスジャグラス", cat: "monster" },
+  { kanji: "惨爪竜", read: "さんそうりゅう", katakana: "オドガロン", cat: "monster" },
+  { kanji: "凶爪竜", read: "きょうそうりゅう", katakana: "オドガロン亜種", cat: "monster" },
+  { kanji: "爆鱗竜", read: "ばくりんりゅう", katakana: "バゼルギウス", cat: "monster" },
+  { kanji: "紅蓮滾る爆鱗竜", read: "ぐれんたぎるばくりんりゅう", katakana: "ぐれんバゼルギウス", cat: "monster" },
+  { kanji: "眩鳥", read: "げんちょう", katakana: "ツィツィヤック", cat: "monster" },
+  { kanji: "掻鳥", read: "そうちょう", katakana: "クルルヤック", cat: "monster" },
+  { kanji: "泥魚竜", read: "でいぎょりゅう", katakana: "ジュラトドス", cat: "monster" },
+  { kanji: "凍魚竜", read: "とうぎょりゅう", katakana: "ブラントドス", cat: "monster" },
+  { kanji: "浮空竜", read: "ふくうりゅう", katakana: "パオウルムー", cat: "monster" },
+  { kanji: "風漂竜", read: "ふうひょうりゅう", katakana: "レイギエナ", cat: "monster" },
+  { kanji: "霜風漂竜", read: "そうふうひょうりゅう", katakana: "凍て刺すレイギエナ", cat: "monster" },
+  { kanji: "絢輝龍", read: "けんきりゅう", katakana: "マム・タロト", cat: "monster" },
+
+  // 【ライズ / サンブレイク】
+  { kanji: "怨虎竜", read: "おんこりゅう", katakana: "マガイマガド", cat: "monster" },
+  { kanji: "怨嗟響めく怨虎竜", read: "えんさどよめくおんこりゅう", katakana: "えんさマガイマガド", cat: "monster" },
+  { kanji: "爵銀龍", read: "しゃくぎんりゅう", katakana: "メル・ゼナ", cat: "monster" },
+  { kanji: "原初を刻む爵銀龍", read: "げんしょをきざむしゃくぎんりゅう", katakana: "げんしょメルゼナ", cat: "monster" },
+  { kanji: "傘鳥", read: "さんちょう", katakana: "アケノシルム", cat: "monster" },
+  { kanji: "河童蛙", read: "かっぱあずま", katakana: "ヨツミワドウ", cat: "monster" },
+  { kanji: "人魚竜", read: "にんぎょりゅう", katakana: "イソネミクニ", cat: "monster" },
+  { kanji: "泥翁竜", read: "でいおうりゅう", katakana: "オロミドロ", cat: "monster" },
+  { kanji: "溶翁竜", read: "ようおうりゅう", katakana: "オロミドロ亜種", cat: "monster" },
+  { kanji: "雪鬼獣", read: "せっきじゅう", katakana: "ゴシャハギ", cat: "monster" },
+  { kanji: "妃蜘蛛", read: "きさきぐも", katakana: "ヤツカダキ", cat: "monster" },
+  { kanji: "熾妃蜘蛛", read: "しきさきぐも", katakana: "ヤツカダキ亜種", cat: "monster" },
+  { kanji: "風神龍", read: "ふうじんりゅう", katakana: "イブシマキヒコ", cat: "monster" },
+  { kanji: "雷神龍", read: "らいじんりゅう", katakana: "ナルハタタヒメ", cat: "monster" },
+  { kanji: "冥淵龍", read: "めいえんりゅう", katakana: "ガイアデルム", cat: "monster" },
+  { kanji: "剛纏獣", read: "ごうてんじゅう", katakana: "ガランゴルム", cat: "monster" },
+  { kanji: "氷狼竜", read: "ひょうろうりゅう", katakana: "ルナガロン", cat: "monster" },
+  { kanji: "鎌生獣", read: "かましょうじゅう", katakana: "イズチ", cat: "monster" },
+
+  // 【ワイルズ (Wilds)】
+  { kanji: "煌雷竜", read: "こうらいりゅう", katakana: "レ・ダウ", cat: "monster" },
+  { kanji: "鎖刃竜", read: "さじんりゅう", katakana: "アルシュベルド", cat: "monster" },
+  { kanji: "沼噴竜", read: "しょうふんりゅう", katakana: "ププロポル", cat: "monster" },
+  { kanji: "赫猿獣", read: "かくえんじゅう", katakana: "アジャラカン", cat: "monster" },
+  { kanji: "纏食竜", read: "てんしょくりゅう", katakana: "ウズ・トゥナ", cat: "monster" },
+
+  // --- 武器 ---
+  { kanji: "飛竜刀【葵】", read: "ひりゅうとうあおい", cat: "weapon" },
+  { kanji: "角王剣アーティラート", read: "かくおうけんあーてぃらーと", cat: "weapon" },
+  { kanji: "鬼神斬破刀", read: "きじんざんはとう", cat: "weapon" },
+  { kanji: "阿武祖龍弩", read: "あぶそりゅうど", cat: "weapon" },
+  { kanji: "煌黒鋭槍", read: "こうこくえいそう", cat: "weapon" },
+  { kanji: "覇導玉", read: "はずどうぎょく", cat: "weapon" },
+  { kanji: "絶一門", read: "ぜついちもん", cat: "weapon" },
+  { kanji: "封龍剣", read: "ふうりゅうけん", cat: "weapon" },
+  { kanji: "大鬼薙刀", read: "おおおになぎなた", cat: "weapon" },
+  { kanji: "ミラアンセス", read: "みらあんせす", cat: "weapon" },
+
+  // --- 防具 ---
+  { kanji: "革ノ胸当て", read: "かわのむねあて", cat: "armor" },
+  { kanji: "金色ノ袴", read: "こんじきのはかま", cat: "armor" },
+  { kanji: "日向・覇", read: "ひゅうがは", cat: "armor" },
+  { kanji: "陸奥・覇", read: "むつは", cat: "armor" },
+  { kanji: "大和・真", read: "やまとしん", cat: "armor" },
+  { kanji: "城塞特務", read: "じょうさいとくむ", cat: "armor" },
+  { kanji: "レウスSヘルム", read: "れうすえすへるむ", cat: "armor" },
+  { kanji: "クシャナメイル", read: "くしゃなめいる", cat: "armor" },
+
+  // --- アイテム・素材 ---
+  { kanji: "強走薬グレート", read: "きょうそうやくぐれーと", cat: "item" },
+  { kanji: "大タル爆弾G", read: "おおたるばくだんじー", cat: "item" },
+  { kanji: "秘薬", read: "ひやく", cat: "item" },
+  { kanji: "古龍骨", read: "こりゅうこつ", cat: "item" },
+  { kanji: "逆鱗", read: "げきりん", cat: "item" },
+  { kanji: "紅玉", read: "こうぎょく", cat: "item" },
+  { kanji: "天鱗", read: "てんりん", cat: "item" },
+  { kanji: "翔蟲", read: "かけりむし", cat: "item" },
+  { kanji: "砥石", read: "といし", cat: "item" },
+  { kanji: "神島", read: "かみしま", cat: "item" }
+];
+
+// --- Web Audio API (SE) ---
+class SoundManager {
+  constructor() {
+    this.ctx = null;
+    this.muted = false;
+  }
+  init() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  playCorrect() {
+    if (this.muted) return;
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+    osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.1); // E5
+    osc.frequency.setValueAtTime(783.99, this.ctx.currentTime + 0.2); // G5
+    gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.4);
+  }
+  playWrong() {
+    if (this.muted) return;
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.3);
+  }
+}
+
+const snd = new SoundManager();
+
+// --- アプリケーション状態 ---
+let state = {
+  category: "all",
+  difficulty: "easy",
+  hintEnabled: true,
+  totalQuestions: 5,
+  currentIndex: 0,
+  score: 0,
+  questions: [],
+  history: []
+};
+
+// --- DOMエレメント ---
+const screens = {
+  setup: document.getElementById("screenSetup"),
+  play: document.getElementById("screenPlay"),
+  result: document.getElementById("screenResult")
+};
+
+// --- ラジオボタン制御 helper ---
+function setupRadioGroup(groupId, callback) {
+  const container = document.getElementById(groupId);
+  container.addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn-radio");
+    if (!btn) return;
+    container.querySelectorAll(".btn-radio").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    callback(btn.dataset.value);
+  });
+}
+
+setupRadioGroup("optCategory", v => state.category = v);
+setupRadioGroup("optDiff", v => state.difficulty = v);
+setupRadioGroup("optHint", v => state.hintEnabled = (v === "on"));
+setupRadioGroup("optCount", v => state.totalQuestions = parseInt(v));
+
+// --- 画面切り替え ---
+function showScreen(name) {
+  Object.keys(screens).forEach(k => screens[k].classList.remove("active"));
+  screens[name].classList.add("active");
+}
+
+// --- ひらがな/カタカナ正規化 helper ---
+function normalizeInput(str) {
+  return str
+    .trim()
+    .replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60)) // カタカナ→ひらがな
+    .replace(/[・\s ]/g, ""); // スペースやドット消去
+}
+
+// --- クエスト開始 ---
+document.getElementById("btnStart").addEventListener("click", () => {
+  let filtered = KANJI_DATABASE;
+  if (state.category !== "all") {
+    filtered = KANJI_DATABASE.filter(item => item.cat === state.category);
+  }
+
+  if (filtered.length === 0) {
+    alert("該当するカテゴリのデータがありません");
+    return;
+  }
+
+  // シャッフル
+  const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+  state.questions = shuffled.slice(0, Math.min(state.totalQuestions, shuffled.length));
+  state.currentIndex = 0;
+  state.score = 0;
+  state.history = [];
+
+  // UI初期化
+  document.getElementById("hudTotal").textContent = state.questions.length;
+  document.getElementById("hudDiff").textContent = state.difficulty === "easy" ? "かんたん" : "むずかしい";
+  document.getElementById("hudHintStatus").textContent = state.hintEnabled ? "ON" : "OFF";
+  
+  const hintBtn = document.getElementById("btnHint");
+  hintBtn.style.display = state.hintEnabled ? "block" : "none";
+
+  showScreen("play");
+  loadQuestion();
+});
+
+// --- 問題の読み込み ---
+function loadQuestion() {
+  const current = state.questions[state.currentIndex];
+  document.getElementById("hudCurrent").textContent = state.currentIndex + 1;
+  document.getElementById("qKanji").textContent = current.kanji;
+  
+  const catNames = { monster: "モンスター", weapon: "武器", armor: "防具", item: "アイテム・素材" };
+  document.getElementById("qCategory").textContent = catNames[current.cat] || "クエスト";
+  
+  document.getElementById("qHint").textContent = "";
+  document.getElementById("answerInput").value = "";
+  document.getElementById("msgArea").textContent = "";
+  document.getElementById("answerInput").focus();
+}
+
+// --- 解答処理 ---
+function checkAnswer(isGiveUp = false) {
+  const current = state.questions[state.currentIndex];
+  const inputRaw = document.getElementById("answerInput").value;
+  const inputNorm = normalizeInput(inputRaw);
+
+  const targetReadNorm = normalizeInput(current.read);
+  const targetKataNorm = current.katakana ? normalizeInput(current.katakana) : "";
+
+  let isCorrect = false;
+
+  if (!isGiveUp) {
+    if (state.difficulty === "easy") {
+      // かんたん：漢字読み 兼 カタカナ名 どちらでも正解
+      if (inputNorm === targetReadNorm || (targetKataNorm && inputNorm === targetKataNorm)) {
+        isCorrect = true;
+      }
+    } else {
+      // むずかしい：漢字読み限定
+      if (inputNorm === targetReadNorm) {
+        isCorrect = true;
+      }
+    }
+  }
+
+  const msgArea = document.getElementById("msgArea");
+
+  if (isCorrect) {
+    snd.playCorrect();
+    msgArea.className = "msg-area msg-correct";
+    msgArea.textContent = "一本！ 正解！";
+    state.score++;
+  } else {
+    snd.playWrong();
+    msgArea.className = "msg-area msg-wrong";
+    let correctStr = current.read;
+    if (current.katakana) correctStr += ` (${current.katakana})`;
+    msgArea.textContent = isGiveUp ? `【正解: ${correctStr}】` : `不正解...【正解: ${correctStr}】`;
+  }
+
+  state.history.push({
+    kanji: current.kanji,
+    correctRead: current.read,
+    isCorrect: isCorrect
+  });
+
+  // 次の問題へ
+  setTimeout(() => {
+    state.currentIndex++;
+    if (state.currentIndex < state.questions.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  }, 1600);
+}
+
+document.getElementById("btnSubmit").addEventListener("click", () => checkAnswer(false));
+document.getElementById("answerInput").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") checkAnswer(false);
+});
+document.getElementById("btnGiveUp").addEventListener("click", () => checkAnswer(true));
+
+// --- ヒント機能 ---
+document.getElementById("btnHint").addEventListener("click", () => {
+  if (!state.hintEnabled) return;
+  const current = state.questions[state.currentIndex];
+  const firstChar = current.read.charAt(0);
+  document.getElementById("qHint").textContent = `ヒント: 最初の文字は「 ${firstChar} 」`;
+});
+
+// --- リザルト表示 ---
+function showResult() {
+  showScreen("result");
+  const total = state.questions.length;
+  const rate = Math.round((state.score / total) * 100);
+
+  document.getElementById("resCorrect").textContent = state.score;
+  document.getElementById("resTotal").textContent = total;
+  document.getElementById("resRate").textContent = rate;
+
+  // 階級判定
+  let rank = "駆け出しハンター";
+  if (rate === 100) rank = "伝説のギルドマスター";
+  else if (rate >= 80) rank = "G級ハンター";
+  else if (rate >= 60) rank = "上位ハンター";
+  else if (rate >= 40) rank = "下位ハンター";
+  document.getElementById("resultRank").textContent = rank;
+
+  // 振り返りリスト
+  const listEl = document.getElementById("reviewList");
+  listEl.innerHTML = "";
+  state.history.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "review-item";
+    div.innerHTML = `
+      <span>${item.kanji} (${item.correctRead})</span>
+      <span class="${item.isCorrect ? 'ok' : 'ng'}">${item.isCorrect ? '◯ 正解' : '✕ 不正解'}</span>
+    `;
+    listEl.appendChild(div);
+  });
+}
+
+document.getElementById("btnRestart").addEventListener("click", () => {
+  showScreen("setup");
+});
+
+// ミュートボタン
+document.getElementById("btnSound").addEventListener("click", (e) => {
+  snd.muted = !snd.muted;
+  e.target.textContent = snd.muted ? "🔇" : "🔊";
+});
+</script>
 </body>
 </html>
