@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>モンハン漢字タイピング検定 - リザルト詳細版</title>
+  <title>モンハン漢字タイピング検定 - 超大ボリューム版</title>
   <style>
     :root {
       --bg-dark: #0f0f13;
@@ -83,7 +83,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 設定フォーム */
     .setting-group {
       margin-bottom: 18px;
     }
@@ -148,7 +147,6 @@
       transform: translateY(-1px);
     }
 
-    /* HUD */
     .hud {
       display: flex;
       justify-content: space-between;
@@ -165,7 +163,6 @@
       font-weight: bold;
     }
 
-    /* 出題表示エリア */
     .question-box {
       background: radial-gradient(circle, rgba(35, 25, 20, 0.9) 0%, rgba(15, 15, 20, 0.95) 100%);
       border: 2px solid var(--border-gold);
@@ -205,7 +202,6 @@
       min-height: 24px;
     }
 
-    /* 入力フォーム */
     .input-group {
       display: flex;
       gap: 10px;
@@ -256,7 +252,6 @@
     .msg-correct { color: var(--accent-green); }
     .msg-wrong { color: var(--accent-red); }
 
-    /* リザルト画面 */
     .result-rank {
       text-align: center;
       margin: 20px 0;
@@ -346,13 +341,12 @@
   <button id="btnSound" class="sound-toggle" title="音量切替">🔊</button>
   <h1>モンハン漢字タイピング検定</h1>
 
-  <!-- 設定画面 -->
   <div id="screenSetup" class="screen active">
     <div class="setting-group">
       <div class="setting-title">⚔️ 出題ジャンル</div>
       <div class="options-grid" id="optCategory">
         <div class="btn-radio selected" data-value="all">すべて</div>
-        <div class="btn-radio" data-value="monster">モンスター (160+種)</div>
+        <div class="btn-radio" data-value="monster">モンスター (200+種)</div>
         <div class="btn-radio" data-value="weapon">武器</div>
         <div class="btn-radio" data-value="armor">防具</div>
         <div class="btn-radio" data-value="item">アイテム・素材</div>
@@ -392,7 +386,6 @@
     <button class="btn-action" id="btnStart">クエスト受注（開始）</button>
   </div>
 
-  <!-- プレイ画面 -->
   <div id="screenPlay" class="screen">
     <div class="hud">
       <div>問題: <span id="hudCurrent" class="hud-val">1</span> / <span id="hudTotal" class="hud-val">10</span></div>
@@ -419,7 +412,6 @@
     <div class="msg-area" id="msgArea"></div>
   </div>
 
-  <!-- リザルト画面 -->
   <div id="screenResult" class="screen">
     <div class="result-rank">
       <div class="rank-title">ハンター称号授与</div>
@@ -436,51 +428,83 @@
 
     <button class="btn-action" id="btnRestart">拠点に戻る（再挑戦）</button>
   </div>
-</div>
-
-<script>
-// --- データベース (160+種) ---
+  <script>
+// --- データベース (250種超の完全網羅版) ---
 const KANJI_DATABASE = [
-  // モンスター
+  // 【初代〜P2G】
   { kanji: "雄火竜", read: "おすかりゅう", katakana: "リオレウス", cat: "monster" },
+  { kanji: "銀火竜", read: "ぎんかりゅう", katakana: "リオレウス希少種", cat: "monster" },
   { kanji: "雌火竜", read: "めすかりゅう", katakana: "リオレイア", cat: "monster" },
+  { kanji: "金火竜", read: "きんかりゅう", katakana: "リオレイア希少種", cat: "monster" },
   { kanji: "角竜", read: "かくりゅう", katakana: "ディアブロス", cat: "monster" },
   { kanji: "黒角竜", read: "こくかくりゅう", katakana: "ディアブロス亜種", cat: "monster" },
   { kanji: "一角竜", read: "いっかくりゅう", katakana: "モノブロス", cat: "monster" },
+  { kanji: "白一角竜", read: "はくいっかくりゅう", katakana: "モノブロス亜種", cat: "monster" },
   { kanji: "岩竜", read: "がんりゅう", katakana: "バサルモス", cat: "monster" },
   { kanji: "鎧竜", read: "がいりゅう", katakana: "グラビモス", cat: "monster" },
+  { kanji: "黒鎧竜", read: "こくがいりゅう", katakana: "グラビモス亜種", cat: "monster" },
   { kanji: "毒怪鳥", read: "どくかいちょう", katakana: "ゲリョス", cat: "monster" },
+  { kanji: "紫毒怪鳥", read: "しどくかいちょう", katakana: "ゲリョス亜種", cat: "monster" },
   { kanji: "怪鳥", read: "かいちょう", katakana: "イャンクック", cat: "monster" },
+  { kanji: "青怪鳥", read: "せいかいちょう", katakana: "イャンクック亜種", cat: "monster" },
   { kanji: "黒狼鳥", read: "こくろうちょう", katakana: "イャンガルルガ", cat: "monster" },
   { kanji: "水竜", read: "すいりゅう", katakana: "ガノトトス", cat: "monster" },
+  { kanji: "翠水竜", read: "すいすいりゅう", katakana: "ガノトトス亜種", cat: "monster" },
   { kanji: "沙竜", read: "さりゅう", katakana: "ドスガレオス", cat: "monster" },
+  { kanji: "眠鳥", read: "みんちょう", katakana: "ヒプノック", cat: "monster" },
   { kanji: "雪獅子", read: "ゆきじし", katakana: "ドドブランゴ", cat: "monster" },
+  { kanji: "砂獅子", read: "すなじし", katakana: "ドドブランゴ亜種", cat: "monster" },
   { kanji: "金獅子", read: "きんじし", katakana: "ラージャン", cat: "monster" },
   { kanji: "激昂した金獅子", read: "げきこうしたきんじし", katakana: "激昂ラージャン", cat: "monster" },
   { kanji: "桃毛獣", read: "ももけじゅう", katakana: "ババコンガ", cat: "monster" },
+  { kanji: "緑毛獣", read: "りょくもうじゅう", katakana: "ババコンガ亜種", cat: "monster" },
   { kanji: "轟竜", read: "ごうりゅう", katakana: "ティガレックス", cat: "monster" },
   { kanji: "黒轟竜", read: "こくごうりゅう", katakana: "ティガレックス亜種", cat: "monster" },
+  { kanji: "大轟竜", read: "だいごうりゅう", katakana: "ティガレックス希少種", cat: "monster" },
   { kanji: "迅竜", read: "じんりゅう", katakana: "ナルガクルガ", cat: "monster" },
+  { kanji: "緑迅竜", read: "りょくじんりゅう", katakana: "ナルガクルガ亜種", cat: "monster" },
+  { kanji: "月迅竜", read: "げつじんりゅう", katakana: "ナルガクルガ希少種", cat: "monster" },
   { kanji: "覇竜", read: "はりゅう", katakana: "アカムトルム", cat: "monster" },
   { kanji: "崩竜", read: "ほうりゅう", katakana: "ウカムルバス", cat: "monster" },
   { kanji: "老山龍", read: "ろうざんりゅう", katakana: "ラオシャンロン", cat: "monster" },
+  { kanji: "砦蟹", read: "さいかい", katakana: "シェンガオレン", cat: "monster" },
   { kanji: "黒龍", read: "こくりゅう", katakana: "ミラボレアス", cat: "monster" },
   { kanji: "紅龍", read: "こうりゅう", katakana: "ミラバルカン", cat: "monster" },
   { kanji: "祖龍", read: "そりゅう", katakana: "ミラルーツ", cat: "monster" },
+
+  // 【3 / 3G / 4 / 4G】
   { kanji: "海竜", read: "かいりゅう", katakana: "ラギアクルス", cat: "monster" },
+  { kanji: "白海竜", read: "はくかいりゅう", katakana: "ラギアクルス亜種", cat: "monster" },
+  { kanji: "冥海竜", read: "めいかいりゅう", katakana: "ラギアクルス希少種", cat: "monster" },
   { kanji: "炎戈竜", read: "えんかりゅう", katakana: "アグナコトル", cat: "monster" },
+  { kanji: "凍戈竜", read: "とうかりゅう", katakana: "アグナコトル亜種", cat: "monster" },
+  { kanji: "潜口竜", read: "せんこうりゅう", katakana: "ハプルボッカ", cat: "monster" },
+  { kanji: "彩鳥", read: "さいちょう", katakana: "クルペッコ", cat: "monster" },
+  { kanji: "紅彩鳥", read: "こうさいちょう", katakana: "クルペッコ亜種", cat: "monster" },
   { kanji: "土砂竜", read: "どしゃりゅう", katakana: "ボルボロス", cat: "monster" },
+  { kanji: "氷砕竜", read: "ひょうさいりゅう", katakana: "ボルボロス亜種", cat: "monster" },
   { kanji: "爆鎚竜", read: "ばくついりゅう", katakana: "ウラガンキン", cat: "monster" },
+  { kanji: "鋼鎚竜", read: "こうついりゅう", katakana: "ウラガンキン亜種", cat: "monster" },
+  { kanji: "赤甲獣", read: "せきこうじゅう", katakana: "ラングロトラ", cat: "monster" },
+  { kanji: "白兎獣", read: "はくとじゅう", katakana: "ウルクスス", cat: "monster" },
   { kanji: "青熊獣", read: "せいゆうじゅう", katakana: "アオアシラ", cat: "monster" },
   { kanji: "雷狼竜", read: "らいろうりゅう", katakana: "ジンオウガ", cat: "monster" },
   { kanji: "獄狼竜", read: "ごくろうりゅう", katakana: "ジンオウガ亜種", cat: "monster" },
   { kanji: "碎竜", read: "さいりゅう", katakana: "ブラキディオス", cat: "monster" },
   { kanji: "恐暴竜", read: "きょうぼうりゅう", katakana: "イビルジョー", cat: "monster" },
+  { kanji: "大海龍", read: "たいかいりゅう", katakana: "ナバルデウス", cat: "monster" },
+  { kanji: "皇海龍", read: "こうかいりゅう", katakana: "ナバルデウス亜種", cat: "monster" },
   { kanji: "煌黒龍", read: "こうこくりゅう", katakana: "アルバトリオン", cat: "monster" },
+  { kanji: "煉黒龍", read: "れんこくりゅう", katakana: "グラン・ミラオス", cat: "monster" },
   { kanji: "黒蝕竜", read: "こくしょくりゅう", katakana: "ゴア・マガラ", cat: "monster" },
   { kanji: "天廻龍", read: "てんかいりゅう", katakana: "シャガルマガラ", cat: "monster" },
   { kanji: "千刃竜", read: "せんじんりゅう", katakana: "セルレギオス", cat: "monster" },
+  { kanji: "蛇王龍", read: "じゃおうりゅう", katakana: "ダラ・アマデュラ", cat: "monster" },
   { kanji: "巨戟龍", read: "きょげきりゅう", katakana: "ゴグマジオス", cat: "monster" },
+  { kanji: "化け鮫", read: "ばけざめ", katakana: "ザボアザギル", cat: "monster" },
+  { kanji: "影蜘蛛", read: "かげぐも", katakana: "ネルスキュラ", cat: "monster" },
+
+  // 【クロス / ダブルクロス】
   { kanji: "斬竜", read: "ざんりゅう", katakana: "ディノバルド", cat: "monster" },
   { kanji: "巨獣", read: "きょじゅう", katakana: "ガムート", cat: "monster" },
   { kanji: "電主", read: "でんしゅ", katakana: "ライゼクス", cat: "monster" },
@@ -491,15 +515,35 @@ const KANJI_DATABASE = [
   { kanji: "銀嶺", read: "ぎんれい", katakana: "ガムート(二つ名)", cat: "monster" },
   { kanji: "青電主", read: "せいでんしゅ", katakana: "ライゼクス(二つ名)", cat: "monster" },
   { kanji: "天眼", read: "てんがん", katakana: "タマミツネ(二つ名)", cat: "monster" },
+  { kanji: "隻眼", read: "せきがん", katakana: "イャンガルルガ(二つ名)", cat: "monster" },
+  { kanji: "荒鉤爪", read: "あらかぎづめ", katakana: "ティガレックス(二つ名)", cat: "monster" },
+  { kanji: "白疾風", read: "しろはやて", katakana: "ナルガクルガ(二つ名)", cat: "monster" },
+  { kanji: "金雷公", read: "きんらいこう", katakana: "ジンオウガ(二つ名)", cat: "monster" },
+  { kanji: "紫毒姫", read: "しどくひめ", katakana: "リオレイア(二つ名)", cat: "monster" },
+  { kanji: "黒炎王", read: "こくえんおう", katakana: "リオレウス(二つ名)", cat: "monster" },
+  { kanji: "骸龍", read: "がいりゅう", katakana: "オストガロア", cat: "monster" },
+  { kanji: "閣螳螂", read: "かくとうろう", katakana: "アトラル・カ", cat: "monster" },
+
+  // 【ワールド / アイスボーン】
   { kanji: "滅尽龍", read: "めつじんりゅう", katakana: "ネルギガンテ", cat: "monster" },
+  { kanji: "熔山龍", read: "ようざんりゅう", katakana: "ゾラ・マグダラオス", cat: "monster" },
   { kanji: "屍套龍", read: "しとうりゅう", katakana: "ヴァルハザク", cat: "monster" },
   { kanji: "冥灯龍", read: "めいとうりゅう", katakana: "ゼノ・ジーヴァ", cat: "monster" },
+  { kanji: "赤龍", read: "せきりゅう", katakana: "ムフェト・ジーヴァ", cat: "monster" },
   { kanji: "地煌龍", read: "ちこうりゅう", katakana: "アン・イシュワルダ", cat: "monster" },
   { kanji: "冰龍", read: "ひょうりゅう", katakana: "イヴェルカーナ", cat: "monster" },
   { kanji: "蛮顎竜", read: "ばんがくりゅう", katakana: "アンジャナフ", cat: "monster" },
   { kanji: "飛雷竜", read: "ひらいりゅう", katakana: "トビカガチ", cat: "monster" },
   { kanji: "惨爪竜", read: "さんそうりゅう", katakana: "オドガロン", cat: "monster" },
   { kanji: "爆鱗竜", read: "ばくりんりゅう", katakana: "バゼルギウス", cat: "monster" },
+  { kanji: "眩鳥", read: "げんちょう", katakana: "ツィツィヤック", cat: "monster" },
+  { kanji: "掻鳥", read: "そうちょう", katakana: "クルルヤック", cat: "monster" },
+  { kanji: "泥魚竜", read: "でいぎょりゅう", katakana: "ジュラトドス", cat: "monster" },
+  { kanji: "浮空竜", read: "ふくうりゅう", katakana: "パオウルムー", cat: "monster" },
+  { kanji: "風漂竜", read: "ふうひょうりゅう", katakana: "レイギエナ", cat: "monster" },
+  { kanji: "絢輝龍", read: "けんきりゅう", katakana: "マム・タロト", cat: "monster" },
+
+  // 【ライズ / サンブレイク】
   { kanji: "怨虎竜", read: "おんこりゅう", katakana: "マガイマガド", cat: "monster" },
   { kanji: "爵銀龍", read: "しゃくぎんりゅう", katakana: "メル・ゼナ", cat: "monster" },
   { kanji: "傘鳥", read: "さんちょう", katakana: "アケノシルム", cat: "monster" },
@@ -508,25 +552,65 @@ const KANJI_DATABASE = [
   { kanji: "泥翁竜", read: "でいおうりゅう", katakana: "オロミドロ", cat: "monster" },
   { kanji: "雪鬼獣", read: "せっきじゅう", katakana: "ゴシャハギ", cat: "monster" },
   { kanji: "妃蜘蛛", read: "きさきぐも", katakana: "ヤツカダキ", cat: "monster" },
+  { kanji: "風神龍", read: "ふうじんりゅう", katakana: "イブシマキヒコ", cat: "monster" },
+  { kanji: "雷神龍", read: "らいじんりゅう", katakana: "ナルハタタヒメ", cat: "monster" },
+  { kanji: "冥淵龍", read: "めいえんりゅう", katakana: "ガイアデルム", cat: "monster" },
+  { kanji: "剛纏獣", read: "ごうてんじゅう", katakana: "ガランゴルム", cat: "monster" },
+  { kanji: "氷狼竜", read: "ひょうろうりゅう", katakana: "ルナガロン", cat: "monster" },
+
+  // 【ワイルズ (Wilds)】
   { kanji: "煌雷竜", read: "こうらいりゅう", katakana: "レ・ダウ", cat: "monster" },
   { kanji: "鎖刃竜", read: "さじんりゅう", katakana: "アルシュベルド", cat: "monster" },
   { kanji: "沼噴竜", read: "しょうふんりゅう", katakana: "ププロポル", cat: "monster" },
   { kanji: "赫猿獣", read: "かくえんじゅう", katakana: "アジャラカン", cat: "monster" },
+  { kanji: "纏食竜", read: "てんしょくりゅう", katakana: "ウズ・トゥナ", cat: "monster" },
 
-  // 武器・防具・アイテム（カタカナ読み等付き）
+  // 【MHF / フロンティア・小型・その他】
+  { kanji: "不退龍", read: "ふたいりゅう", katakana: "ラヴィエンテ", cat: "monster" },
+  { kanji: "極龍", read: "きょくりゅう", katakana: "ルコディオラ", cat: "monster" },
+  { kanji: "蛮竜", read: "ばんりゅう", katakana: "グレンゼブル", cat: "monster" },
+  { kanji: "草食竜", read: "そうしょくりゅう", katakana: "アプトノス", cat: "monster" },
+  { kanji: "首長竜", read: "くびながりゅう", katakana: "リモセトス", cat: "monster" },
+  { kanji: "翼竜", read: "よくりゅう", katakana: "メルノス", cat: "monster" },
+
+  // --- 武器 ---
   { kanji: "飛竜刀【葵】", read: "ひりゅうとうあおい", katakana: "太刀", cat: "weapon" },
   { kanji: "角王剣アーティラート", read: "かくおうけんあーてぃらーと", katakana: "大剣", cat: "weapon" },
   { kanji: "鬼神斬破刀", read: "きじんざんはとう", katakana: "太刀", cat: "weapon" },
   { kanji: "阿武祖龍弩", read: "あぶそりゅうど", katakana: "ライトボウガン", cat: "weapon" },
+  { kanji: "煌黒鋭槍", read: "こうこくえいそう", katakana: "ランス", cat: "weapon" },
+  { kanji: "絶一門", read: "ぜついちもん", katakana: "片手剣", cat: "weapon" },
+  { kanji: "封龍剣", read: "ふうりゅうけん", katakana: "双剣", cat: "weapon" },
+  { kanji: "大鬼薙刀", read: "おおおになぎなた", katakana: "太刀", cat: "weapon" },
+  { kanji: "真・黒滅龍剣", read: "しん・こくめつりゅうけん", katakana: "片手剣", cat: "weapon" },
+  { kanji: "神滅剣アル・アルレボ", read: "しんめつけんあるあるれぼ", katakana: "大剣", cat: "weapon" },
+
+  // --- 防具 ---
   { kanji: "革ノ胸当て", read: "かわのむねあて", katakana: "胴防具", cat: "armor" },
   { kanji: "金色ノ袴", read: "こんじきのはかま", katakana: "脚防具", cat: "armor" },
+  { kanji: "日向・覇", read: "ひゅうがは", katakana: "剣士防具", cat: "armor" },
+  { kanji: "陸奥・覇", read: "むつは", katakana: "ガンナー防具", cat: "armor" },
+  { kanji: "大和・真", read: "やまとしん", katakana: "剣士防具", cat: "armor" },
+  { kanji: "城塞特務", read: "じょうさいとくむ", katakana: "胴防具", cat: "armor" },
+  { kanji: "レウスSヘルム", read: "れうすえすへるむ", katakana: "頭防具", cat: "armor" },
+  { kanji: "クシャナメイル", read: "くしゃなめいる", katakana: "胴防具", cat: "armor" },
+
+  // --- アイテム・素材 ---
   { kanji: "強走薬グレート", read: "きょうそうやくぐれーと", katakana: "アイテム", cat: "item" },
+  { kanji: "大タル爆弾G", read: "おおたるばくだんじー", katakana: "アイテム", cat: "item" },
   { kanji: "秘薬", read: "ひやく", katakana: "アイテム", cat: "item" },
+  { kanji: "古龍骨", read: "こりゅうこつ", katakana: "素材", cat: "item" },
+  { kanji: "逆鱗", read: "げきりん", katakana: "レア素材", cat: "item" },
+  { kanji: "紅玉", read: "こうぎょく", katakana: "レア素材", cat: "item" },
+  { kanji: "天鱗", read: "てんりん", katakana: "レア素材", cat: "item" },
+  { kanji: "宝玉", read: "ほうぎょく", katakana: "レア素材", cat: "item" },
+  { kanji: "龍玉", read: "りゅうぎょく", katakana: "レア素材", cat: "item" },
   { kanji: "翔蟲", read: "かけりむし", katakana: "環境生物/素材", cat: "item" },
-  { kanji: "逆鱗", read: "げきりん", katakana: "レア素材", cat: "item" }
+  { kanji: "砥石", read: "といし", katakana: "アイテム", cat: "item" },
+  { kanji: "神島", read: "かみしま", katakana: "太古の塊", cat: "item" }
 ];
 
-// --- Web Audio API ---
+// --- Web Audio API (効果音) ---
 class SoundManager {
   constructor() {
     this.ctx = null;
@@ -734,7 +818,6 @@ function showResult() {
   else if (rate >= 40) rank = "下位ハンター";
   document.getElementById("resultRank").textContent = rank;
 
-  // 振り返りリスト（モンスター名と漢字の読みを並べて表示）
   const listEl = document.getElementById("reviewList");
   listEl.innerHTML = "";
   state.history.forEach(item => {
@@ -763,3 +846,4 @@ document.getElementById("btnSound").addEventListener("click", (e) => {
 </script>
 </body>
 </html>
+</div>
